@@ -17,26 +17,25 @@ public class LogLevelCommand implements TabExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.isOp()) return true;
         switch (args.length) {
-            case 0 -> {
+            default -> {
                 sender.sendMessage(Main.prefix + "Usage: /loglevel <output: console/textfile/file> <level: disabled/valuables/normal/detailed/everything>");
-                sender.sendMessage(Main.prefix + "Status (Console): " + MinecraftLogger.getFormattedLogLevelString(MinecraftLogger.getLogLevel(LogOutput.CONSOLE)) + ChatColor.YELLOW + " - Textfile: " + MinecraftLogger.getFormattedLogLevelString(MinecraftLogger.getLogLevel(LogOutput.TEXTFILE)) + ChatColor.YELLOW + " - File: " + MinecraftLogger.getFormattedLogLevelString(MinecraftLogger.getLogLevel(LogOutput.FILE)));
+                sender.sendMessage(Main.prefix + "Status (Console): " + LoggerUtils.getFormattedLogLevelString(LoggerUtils.getLogLevel(LogOutput.CONSOLE)) + ChatColor.YELLOW + " - Textfile: " + LoggerUtils.getFormattedLogLevelString(LoggerUtils.getLogLevel(LogOutput.TEXTFILE)) + ChatColor.YELLOW + " - File: " + LoggerUtils.getFormattedLogLevelString(LoggerUtils.getLogLevel(LogOutput.FILE)));
             }
             case 1 -> {
                 if (!LogOutput.names().contains(args[0])) {
                     sender.sendMessage(Main.prefix + "Usage: /loglevel <output: console/textfile/file> <level: disabled/valuables/normal/detailed/everything>");
                     return true;
                 }
-                sender.sendMessage(Main.prefix + "Status (" + args[0].toLowerCase() + "): " + MinecraftLogger.getFormattedLogLevelString(MinecraftLogger.getLogLevel(LogOutput.valueOf(args[0].toUpperCase()))));
+                sender.sendMessage(Main.prefix + "Status (" + args[0].toLowerCase() + "): " + LoggerUtils.getFormattedLogLevelString(LoggerUtils.getLogLevel(LogOutput.valueOf(args[0].toUpperCase()))));
             }
             case 2 -> {
                 if (!LogOutput.names().contains(args[0]) || !LogLevel.names().contains(args[0])) {
                     sender.sendMessage(Main.prefix + "Usage: /loglevel <output: console/textfile/file> <level: disabled/valuables/normal/detailed/everything>");
                     return true;
                 }
-                MinecraftLogger.setLogLevel(LogOutput.valueOf(args[0].toUpperCase()), LogLevel.valueOf(args[1].toUpperCase()));
-                sender.sendMessage(Main.prefix + "Successfully updated LogLevel of " + args[0].toUpperCase() + " to " + MinecraftLogger.getFormattedLogLevelString(LogLevel.valueOf(args[1].toUpperCase())));
+                LoggerUtils.setLogLevel(LogOutput.valueOf(args[0].toUpperCase()), LogLevel.valueOf(args[1].toUpperCase()));
+                sender.sendMessage(Main.prefix + "Successfully updated LogLevel of " + args[0].toUpperCase() + " to " + LoggerUtils.getFormattedLogLevelString(LogLevel.valueOf(args[1].toUpperCase())));
             }
-            default -> sender.sendMessage(Main.prefix + "Usage: /loglevel <output: console/textfile/file> <level: disabled/valuables/normal/detailed/everything>");
         }
         return false;
     }

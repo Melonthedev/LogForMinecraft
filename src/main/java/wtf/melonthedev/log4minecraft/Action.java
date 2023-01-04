@@ -5,8 +5,26 @@ import java.util.List;
 
 public enum Action {
 
-    INTERACTED, OPENED, BROKE, PLACED, PICKEDUP, DROPPED, GRABBED, DIED, WASBANNED;
+    INTERACT("interacted"),
+    OPEN("opened"),
+    BREAK("broke"),
+    PLACE("placed"),
+    PICKUP("picked up"),
+    DROP("dropped"),
+    GRAB("grabbed"),
+    DIE("died"),
+    DESPAWN("despawned"),
+    BAN("got banned");
 
+    private String string;
+
+    Action(String displayedString) {
+        string = displayedString;
+    }
+
+    public String getString() {
+        return string;
+    }
 
     public static List<String> names() {
         List<String> names = new ArrayList<>();

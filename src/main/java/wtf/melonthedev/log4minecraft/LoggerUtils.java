@@ -1,8 +1,12 @@
 package wtf.melonthedev.log4minecraft;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import wtf.melonthedev.log4minecraft.enums.LogLevel;
+import wtf.melonthedev.log4minecraft.enums.LogOutput;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,24 +17,48 @@ import java.util.Date;
 
 public class LoggerUtils {
 
-
-    public static LogLevel getLogLevelByType() {
-
-
-        return LogLevel.NORMAL; //TODO: Impl
+    public static void setLogLevel(LogOutput output, LogLevel level) {
+        Main.getPlugin().getConfig().set("loglevels." + output.name(), level.name());
+        Main.getPlugin().saveConfig();
     }
 
-    public static String getLogText(LogEntry entry) {
-        return getDateTimeString()
-                + entry.getPlayerName() + " "
-                + entry.getAction().name().toLowerCase() + " "
-                + entry.getType()
-                + (entry.getLocation() == null ? "" : " at X: " + entry.getLocation().getX() + " Y: " + entry.getLocation().getY() + " Z: " + entry.getLocation().getZ() + " W: " + (entry.getLocation().getWorld() == null ? "unknown" : entry.getLocation().getWorld().getName()))
-                + (entry.getOwner() == null ? "" :  " from " + entry.getOwner())
-                + (entry.getExecutor() == null ? "" :  " by " + entry.getExecutor());
+    public static LogLevel getLogLevel(LogOutput output) {
+        if (!Main.getPlugin().getConfig().contains("loglevels." + output.name())) {
+            setLogLevel(output, LogLevel.NORMAL);
+        }
+        return LogLevel.valueOf(Main.getPlugin().getConfig().getString("loglevels." + output.name()));
     }
 
-    private static String getDateTimeString() {
+    public static void setLogAction(Action action, boolean log) {
+        Main.getPlugin().getConfig().set("logactions." + action.name(), log);
+        Main.getPlugin().saveConfig();
+    }
+
+    public static boolean getLogAction(Action action) {
+        if (!Main.getPlugin().getConfig().contains("logactions." + action.name()))
+            setLogAction(action, true);
+        return Main.getPlugin().getConfig().getBoolean("logactions." + action.name());
+    }
+
+    public static String getFormattedLogLevelString(LogLevel level) {
+        return switch(level) {
+            case DISABLED -> ChatColor.RED + "Disabled";
+            case VALUABLES -> ChatColor.LIGHT_PURPLE + "Valuables";
+            case NORMAL -> ChatColor.AQUA + "Normal";
+            case DETAILED -> ChatColor.DARK_GREEN + "Detailed";
+            case EVERYTHING -> ChatColor.GREEN + "Everything";
+        };
+    }
+
+    public static LogLevel getLevel(String type) {
+        try {
+            return LogLevel.valueOf(Main.getPlugin().getConfig().getString("logLevels." + type, "normal"));
+        } catch (IllegalArgumentException e) {
+            return LogLevel.NORMAL;
+        }
+    }
+
+    public static String getDateTimeString() {
         Date currentDate = new Date();
         return "[" + DateFormat.getDateInstance().format(currentDate) + " " + (currentDate.getHours() < 10 ? "0" + currentDate.getHours() : currentDate.getHours()) + ":" + (currentDate.getMinutes() < 10 ? "0" + currentDate.getMinutes() : currentDate.getMinutes()) + "] ";
     }
@@ -62,6 +90,31 @@ public class LoggerUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static boolean isValidForLogLevel(LogEntry entry, LogLevel level) {
+        if (!getLogAction(entry.getAction())) return false;
+        switch (level) {
+            case DISABLED -> {
+                return false;
+            }
+            case VALUABLES -> {
+                return getLevel(entry.type) == LogLevel.VALUABLES;
+            }
+            case NORMAL -> {
+                return getLevel(entry.type) == LogLevel.VALUABLES
+                        || getLevel(entry.type) == LogLevel.NORMAL;
+            }
+            case DETAILED -> {
+                return getLevel(entry.type) == LogLevel.VALUABLES
+                        || getLevel(entry.type) == LogLevel.NORMAL
+                        || getLevel(entry.type) == LogLevel.DETAILED;
+            }
+            case EVERYTHING -> {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
