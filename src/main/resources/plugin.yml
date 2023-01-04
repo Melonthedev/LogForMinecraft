@@ -1,0 +1,12 @@
+name: Log4Minecraft
+version: '${project.version}'
+main: wtf.melonthedev.log4minecraft.Main
+api-version: 1.19
+authors: [ Melonthedev ]
+description: A customizable logger for minecraft with console logging - logging to a textfile - logging to a file which can be inspected and viewed with the loginspector
+
+commands:
+  loglevel:
+    description: Set the loglevel of a certain output [Team Only]
+  logaction:
+    description: Set the actions that should be logged [Team Only]
