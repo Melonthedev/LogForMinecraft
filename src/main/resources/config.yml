@@ -862,7 +862,7 @@ logLevels: # Set between normal/disabled/detailed/valuable
   paper: normal
   book: normal
   slime_ball: valuable
-  egg: normal
+  egg: detailed
   compass: normal
   recovery_compass: normal
   bundle: normal
@@ -922,11 +922,11 @@ logLevels: # Set between normal/disabled/detailed/valuable
   dried_kelp: normal
   pumpkin_seeds: normal
   melon_seeds: normal
-  beef: normal
-  cooked_beef: normal
-  chicken: normal
-  cooked_chicken: normal
-  rotten_flesh: normal
+  beef: detailed
+  cooked_beef: detailed
+  chicken: detailed
+  cooked_chicken: detailed
+  rotten_flesh: detailed
   ender_pearl: normal
   blaze_rod: normal
   ghast_tear: normal
