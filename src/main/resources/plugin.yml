@@ -10,3 +10,8 @@ commands:
     description: Set the loglevel of a certain output [Team Only]
   logaction:
     description: Set the actions that should be logged [Team Only]
+  playeractivity:
+    description: Check the player activity of a player
+    aliases:
+      - checksusplayeractivity
+      - checkplayeractivity

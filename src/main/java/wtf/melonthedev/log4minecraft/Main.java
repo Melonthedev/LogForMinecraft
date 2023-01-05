@@ -7,6 +7,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
 import wtf.melonthedev.log4minecraft.commands.LogActionCommand;
 import wtf.melonthedev.log4minecraft.commands.LogLevelCommand;
+import wtf.melonthedev.log4minecraft.commands.PlayerActivityCommand;
 
 import java.util.logging.Level;
 
@@ -26,6 +27,7 @@ public final class Main extends JavaPlugin {
         //Register Commands
         getCommand("loglevel").setExecutor(new LogLevelCommand());
         getCommand("logaction").setExecutor(new LogActionCommand());
+        getCommand("playeractivity").setExecutor(new PlayerActivityCommand());
 
         //Register Listeners
         Bukkit.getPluginManager().registerEvents(new ActionListeners(), this);

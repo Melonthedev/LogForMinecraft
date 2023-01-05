@@ -7,7 +7,6 @@ public enum LogOutput {
 
     CONSOLE, TEXTFILE, FILE;
 
-
     public static List<String> names() {
         List<String> names = new ArrayList<>();
         for (LogOutput output : LogOutput.values()) {

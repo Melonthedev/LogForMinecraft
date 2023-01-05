@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum LogLevel {
-
     DISABLED, VALUABLES, NORMAL, DETAILED, EVERYTHING;
-
 
     public static List<String> names() {
         List<String> names = new ArrayList<>();
@@ -15,5 +13,4 @@ public enum LogLevel {
         }
         return names;
     }
-
 }

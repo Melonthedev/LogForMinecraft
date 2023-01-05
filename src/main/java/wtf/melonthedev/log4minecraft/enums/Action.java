@@ -1,10 +1,9 @@
-package wtf.melonthedev.log4minecraft;
+package wtf.melonthedev.log4minecraft.enums;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public enum Action {
-
     INTERACT("interacted"),
     OPEN("opened"),
     BREAK("broke"),
@@ -16,7 +15,7 @@ public enum Action {
     DESPAWN("despawned"),
     BAN("got banned");
 
-    private String string;
+    private final String string;
 
     Action(String displayedString) {
         string = displayedString;
@@ -33,5 +32,4 @@ public enum Action {
         }
         return names;
     }
-
 }

@@ -1,6 +1,5 @@
 package wtf.melonthedev.log4minecraft;
 
-import org.json.simple.JSONObject;
 import wtf.melonthedev.log4minecraft.enums.LogLevel;
 import wtf.melonthedev.log4minecraft.enums.LogOutput;
 
@@ -12,7 +11,7 @@ import java.util.logging.LogRecord;
 public class MinecraftLogger {
 
     public static void log(LogEntry entry) {
-        if (!LoggerUtils.getLogAction(entry.getAction())) return; //Return if action shouldn't be logged
+        if (!LoggerUtils.getLogAction(entry.action())) return; //Return if action shouldn't be logged
         if (LoggerUtils.getLogLevel(LogOutput.CONSOLE) != LogLevel.DISABLED) logToConsole(entry);
         if (LoggerUtils.getLogLevel(LogOutput.TEXTFILE) != LogLevel.DISABLED) logToTextFile(entry);
         if (LoggerUtils.getLogLevel(LogOutput.FILE) != LogLevel.DISABLED) logToFile(entry);

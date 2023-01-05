@@ -3,10 +3,9 @@ package wtf.melonthedev.log4minecraft.commands;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
-import wtf.melonthedev.log4minecraft.Action;
+import wtf.melonthedev.log4minecraft.enums.Action;
 import wtf.melonthedev.log4minecraft.LoggerUtils;
 import wtf.melonthedev.log4minecraft.Main;
-import wtf.melonthedev.log4minecraft.MinecraftLogger;
 
 import java.util.ArrayList;
 import java.util.List;
