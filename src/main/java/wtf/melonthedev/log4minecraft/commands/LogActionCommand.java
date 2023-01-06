@@ -17,21 +17,21 @@ public class LogActionCommand implements TabExecutor {
         if (!sender.isOp()) return true;
         switch (args.length) {
             case 1 -> {
-                if (!Action.names().contains(args[0])) {
-                    sender.sendMessage(Main.prefix + "Usage: /logaction <action: INTERACTED/OPENED/BROKE/PLACED/PICKEDUP/DROPPED/GRABBED/DIED/WASBANNED> <true/false>");
+                if (!Action.names().contains(args[0].toUpperCase())) {
+                    sender.sendMessage(Main.prefix + "Usage: /logAction <action> <true/false>");
                     return true;
                 }
                 sender.sendMessage(Main.prefix + "Status (" + args[0].toLowerCase() + "): " + LoggerUtils.getLogAction(Action.valueOf(args[0].toUpperCase())));
             }
             case 2 -> {
                 if (!Action.names().contains(args[0]) || (!args[1].equalsIgnoreCase("true") && !args[1].equalsIgnoreCase("false"))) {
-                    sender.sendMessage(Main.prefix + "Usage: /logaction <action: INTERACTED/OPENED/BROKE/PLACED/PICKEDUP/DROPPED/GRABBED/DIED/WASBANNED> <true/false>");
+                    sender.sendMessage(Main.prefix + "Usage: /logAction <action> <true/false>");
                     return true;
                 }
                 LoggerUtils.setLogAction(Action.valueOf(args[0]), Boolean.parseBoolean(args[1]));
                 sender.sendMessage(Main.prefix + "Success! Actions from type '" + args[0].toUpperCase() + "' " + (Boolean.parseBoolean(args[1]) ? "will" : "won't") + " be logged in the future.");
             }
-            default -> sender.sendMessage(Main.prefix + "Usage: /logaction <action: INTERACTED/OPENED/BROKE/PLACED/PICKEDUP/DROPPED/GRABBED/DIED/WASBANNED> <true/false>");
+            default -> sender.sendMessage(Main.prefix + "Usage: /logAction <action> <true/false>");
         }
         return false;
     }

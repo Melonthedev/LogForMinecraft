@@ -1,5 +1,8 @@
 package wtf.melonthedev.log4minecraft;
 
+import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -9,84 +12,113 @@ import org.bukkit.event.entity.EntityDropItemEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataHolder;
+import org.bukkit.persistence.PersistentDataType;
 import wtf.melonthedev.log4minecraft.enums.Action;
 
 public class ActionListeners implements Listener {
 
     @EventHandler
     public void onContainerInteract(PlayerInteractEvent event) {
-        if (event.getClickedBlock() == null) return;
-        MinecraftLogger.log(new LogEntry(event.getPlayer(),
+        if (event.getClickedBlock() == null || event.getAction() == org.bukkit.event.block.Action.LEFT_CLICK_BLOCK || event.getHand() == EquipmentSlot.OFF_HAND) return;
+        MinecraftLogger.log(new LogEntry(
+                new LogTarget(event.getPlayer()),
                 Action.INTERACT,
                 new LogTarget(event.getClickedBlock()),
-                event.getClickedBlock().getLocation(),
-                null,
                 null));
     }
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        MinecraftLogger.log(new LogEntry(event.getPlayer(),
+        if (event.getBlock().getState() instanceof PersistentDataHolder) {
+            PersistentDataContainer container = ((PersistentDataHolder) event.getBlock().getState()).getPersistentDataContainer();
+            container.set(new NamespacedKey(Main.getPlugin(), "owner"), PersistentDataType.STRING, event.getPlayer().getUniqueId().toString());
+            System.out.println(event.getBlock().getState().update());
+            System.out.println("SET OWNER: " + event.getPlayer().getUniqueId() + " " + event.getBlock().getState());
+        }
+        MinecraftLogger.log(new LogEntry(
+                new LogTarget(event.getPlayer()),
                 Action.PLACE,
                 new LogTarget(event.getBlockPlaced()),
-                event.getBlockPlaced().getLocation(),
-                null,
                 null));
     }
 
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        MinecraftLogger.log(new LogEntry(event.getPlayer(),
+        MinecraftLogger.log(new LogEntry(
+                new LogTarget(event.getPlayer()),
                 Action.BREAK,
                 new LogTarget(event.getBlock()),
-                event.getBlock().getLocation(),
-                null,
                 null));
     }
 
     @EventHandler
     public void onInventoryMoveItem(InventoryClickEvent event) {
         if (event.getCurrentItem() == null) return;
-        MinecraftLogger.log(new LogEntry(event.getWhoClicked(),
-                Action.GRAB,
+        MinecraftLogger.log(new LogEntry(
+                new LogTarget(event.getWhoClicked()),
+                Action.GRAB.setDisplayedString(event.getAction().name().toLowerCase().replaceAll("_", "")),
                 new LogTarget(event.getCurrentItem()),
-                event.getWhoClicked().getLocation(),
-                null,
-                event.getAction().name()));
-    }
-
-    @EventHandler
-    public void onItemPickup(EntityPickupItemEvent event) {
-        String owner = event.getItem().getOwner() == null ? (event.getItem().getThrower() == null ? "" : event.getItem().getThrower().toString()) : event.getItem().getOwner().toString();
-        MinecraftLogger.log(new LogEntry(event.getEntity(),
-                Action.PICKUP,
-                new LogTarget(event.getItem()),
-                event.getItem().getLocation(),
-                owner,
                 null));
     }
 
     @EventHandler
+    public void onItemPickup(EntityPickupItemEvent event) {
+        OfflinePlayer owner = event.getItem().getOwner() == null ? (event.getItem().getThrower() == null ? null : Bukkit.getOfflinePlayer(event.getItem().getThrower())) : Bukkit.getOfflinePlayer(event.getItem().getOwner());
+        MinecraftLogger.log(new LogEntry(
+                new LogTarget(event.getEntity()),
+                Action.PICKUP,
+                new LogTarget(event.getItem()),
+                owner));
+    }
+
+    @EventHandler
     public void onItemDrop(EntityDropItemEvent event) {
-        MinecraftLogger.log(new LogEntry(event.getEntity(), Action.DROP, new LogTarget(event.getItemDrop()), event.getItemDrop().getLocation(), null, null));
+        MinecraftLogger.log(new LogEntry(
+                new LogTarget(event.getEntity()),
+                Action.DROP,
+                new LogTarget(event.getItemDrop()),
+                null));
+    }
+
+    @EventHandler
+    public void onItemDrop(PlayerDropItemEvent event) {
+        MinecraftLogger.log(new LogEntry(
+                new LogTarget(event.getPlayer()),
+                Action.DROP,
+                new LogTarget(event.getItemDrop()),
+                null));
     }
 
     @EventHandler
     public void onItemDespawn(ItemDespawnEvent event) {
-        String owner = event.getEntity().getOwner() == null ? (event.getEntity().getThrower() == null ? "" : event.getEntity().getThrower().toString()) : event.getEntity().getOwner().toString();
-        MinecraftLogger.log(new LogEntry(event.getEntity(), Action.DESPAWN, new LogTarget(event.getEntity()), event.getLocation(), owner, null));
+        OfflinePlayer owner = event.getEntity().getOwner() == null ? (event.getEntity().getThrower() == null ? null : Bukkit.getOfflinePlayer(event.getEntity().getThrower())) : Bukkit.getOfflinePlayer(event.getEntity().getOwner());
+        MinecraftLogger.log(new LogEntry(
+                new LogTarget(event.getEntity()),
+                Action.DESPAWN,
+                owner));
     }
 
     @EventHandler
     public void onEntityInteract(PlayerInteractEntityEvent event) {
-        MinecraftLogger.log(new LogEntry(event.getPlayer(), Action.INTERACT, new LogTarget(event.getRightClicked()), event.getRightClicked().getLocation(), null, null));
+        MinecraftLogger.log(new LogEntry(
+                new LogTarget(event.getPlayer()),
+                Action.INTERACT,
+                new LogTarget(event.getRightClicked()),
+                null));
     }
 
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
-        MinecraftLogger.log(new LogEntry(event.getEntity(), Action.DIE, new LogTarget(event.getEntity()), event.getEntity().getLocation(), null, null));
+        LogTarget subject = new LogTarget(event.getEntity().getKiller() == null ? event.getEntity() : event.getEntity().getKiller());
+        LogTarget target = event.getEntity().getKiller() == null ? null : new LogTarget(event.getEntity());
+        Action action = event.getEntity().getKiller() == null ? Action.DIE : Action.KILL;
+        MinecraftLogger.log(new LogEntry(subject, action, target, null));
     }
 }

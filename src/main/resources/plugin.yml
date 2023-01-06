@@ -15,3 +15,10 @@ commands:
     aliases:
       - checksusplayeractivity
       - checkplayeractivity
+  findevent:
+    description: Find a log entry
+    aliases:
+      - findlog
+      - searchlog
+  logcategory:
+    description: Sets a category for specific items and mobs

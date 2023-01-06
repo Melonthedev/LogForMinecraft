@@ -1,6 +1,24 @@
 # Config file for Log4Minecraft
 
+# X: 53.4383465 <-> X: 53
+useExactLocations: false
 
+logOutputLevels:
+  CONSOLE: VALUABLE
+  TEXTFILE: VALUABLE
+  FILE: NORMAL
+
+logactions:
+  BREAK: true
+  DIE: true
+  DESPAWN: true
+  KILL: true
+  PICKUP: true
+  GRAB: true
+  DROP: true
+  INTERACT: true
+  PLACE: true
+  BAN: true
 
 logLevels: # Set between normal/disabled/detailed/valuable
   stone: detailed
@@ -10,7 +28,7 @@ logLevels: # Set between normal/disabled/detailed/valuable
   polished_diorite: detailed
   andesite: detailed
   polished_andesite: detailed
-  deepslate: normal
+  deepslate: detailed
   cobbled_deepslate: detailed
   polished_deepslate: detailed
   calcite: normal

@@ -1,9 +1,11 @@
 package wtf.melonthedev.log4minecraft;
 
-import wtf.melonthedev.log4minecraft.enums.LogLevel;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import wtf.melonthedev.log4minecraft.enums.LogOutput;
 
 import java.io.*;
+import java.time.Instant;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -11,10 +13,11 @@ import java.util.logging.LogRecord;
 public class MinecraftLogger {
 
     public static void log(LogEntry entry) {
-        if (!LoggerUtils.getLogAction(entry.action())) return; //Return if action shouldn't be logged
-        if (LoggerUtils.getLogLevel(LogOutput.CONSOLE) != LogLevel.DISABLED) logToConsole(entry);
-        if (LoggerUtils.getLogLevel(LogOutput.TEXTFILE) != LogLevel.DISABLED) logToTextFile(entry);
-        if (LoggerUtils.getLogLevel(LogOutput.FILE) != LogLevel.DISABLED) logToFile(entry);
+        if (!LoggerUtils.getLogAction(entry.getAction()))
+            return; //Return if action shouldn't be logged
+        logToConsole(entry);
+        logToTextFile(entry);
+        logToFile(entry);
     }
 
     private static void logToConsole(LogEntry entry) {
@@ -26,8 +29,8 @@ public class MinecraftLogger {
         if (!LoggerUtils.isValidForLogLevel(entry, LoggerUtils.getLogLevel(LogOutput.TEXTFILE))) return;
         Writer output;
         String fileName = "log4minecraft-" + Calendar.getInstance().get(Calendar.YEAR) +
-                "-" + (Calendar.getInstance().get(Calendar.MONTH) + 1 < 10 ? "0" + Calendar.getInstance().get(Calendar.MONTH) + 1 : Calendar.getInstance().get(Calendar.MONTH) + 1) +
-                "-" + (Calendar.getInstance().get(Calendar.DAY_OF_MONTH) < 10 ? "0" + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) : Calendar.getInstance().get(Calendar.DAY_OF_MONTH)) + ".txt";
+                "-" + LoggerUtils.getWithZeros(Calendar.getInstance().get(Calendar.MONTH) + 1) +
+                "-" + LoggerUtils.getWithZeros(Calendar.getInstance().get(Calendar.DAY_OF_MONTH)) + ".txt";
         File logFile = new File(Main.getPlugin().getDataFolder(), fileName);
         if (!logFile.exists()) {
             try {
@@ -47,27 +50,27 @@ public class MinecraftLogger {
     }
 
     private static void logToFile(LogEntry entry) {
-        /*JSONObject object = LoggerUtils.getJsonObjFromFile();
+        if (!LoggerUtils.isValidForLogLevel(entry, LoggerUtils.getLogLevel(LogOutput.FILE))) return;
+        JSONObject object = LoggerUtils.getJsonObjFromFile();
+        JSONArray array = (JSONArray) object.get("logs");
         JSONObject log = new JSONObject();
-        log.put("player", "melonthedev");
-        log.put("action", "BROKE");
-        //object.("logs", log);
-        System.out.println(object);
-        System.out.println(log);
-        try (FileWriter file = new FileWriter("fileName.json")) {
-            file.write(object.toString()); // data is a JSON string here
+        JSONObject location = new JSONObject();
+        location.put("x", entry.getLocation().getBlockX());
+        location.put("y", entry.getLocation().getBlockY());
+        location.put("z", entry.getLocation().getBlockZ());
+        location.put("w", entry.getLocation().getWorld().getName());
+        log.put("subject", entry.getSubject().getLabel());
+        log.put("action", entry.getAction().name());
+        if (entry.getTarget() != null) log.put("target", entry.getTarget().getLabel());
+        log.put("location", location);
+        log.put("created", Instant.now().getEpochSecond());
+        if (entry.getOwner() != null) log.put("owner", entry.getOwner().getName());
+        array.add(log);
+        try (FileWriter file = new FileWriter(LoggerUtils.getJsonFile())) {
+            file.write(object.toJSONString()); // data is a JSON string here
             file.flush();
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
-        //JsonObject obj = new JsonObject();
-        //obj.addProperty("ddd", "lolPENIS");
-        //String json = obj.getAsString();
-        //System.out.println(obj);
-        // pretty-print
-        //String jsonString2 = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(new Staff());
-        System.out.println("logtofile");
+        }
     }
-
-
 }

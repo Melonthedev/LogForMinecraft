@@ -1,10 +1,12 @@
 package wtf.melonthedev.log4minecraft.enums;
 
+import org.bukkit.event.inventory.InventoryAction;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public enum Action {
-    INTERACT("interacted"),
+    INTERACT("interacted with"),
     OPEN("opened"),
     BREAK("broke"),
     PLACE("placed"),
@@ -12,10 +14,13 @@ public enum Action {
     DROP("dropped"),
     GRAB("grabbed"),
     DIE("died"),
+    KILL("killed"),
     DESPAWN("despawned"),
-    BAN("got banned");
+    BAN("got banned"),
 
-    private final String string;
+    ALL("*");
+
+    private String string;
 
     Action(String displayedString) {
         string = displayedString;
@@ -25,6 +30,11 @@ public enum Action {
         return string;
     }
 
+    public Action setDisplayedString(String string) {
+        this.string = string;
+        return this;
+    }
+
     public static List<String> names() {
         List<String> names = new ArrayList<>();
         for (Action action : Action.values()) {
@@ -32,4 +42,5 @@ public enum Action {
         }
         return names;
     }
+
 }
