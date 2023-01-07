@@ -54,7 +54,7 @@ public class LogEntry {
             PersistentDataContainer container = state.getPersistentDataContainer();
             switch (action) {
                 case PLACE -> container.set(key, PersistentDataType.STRING, getSubject().getEntity().getUniqueId().toString());
-                case INTERACT, BREAK, OPEN -> {
+                case INTERACT, BREAK -> {
                     if (!container.has(key, PersistentDataType.STRING)) return;
                     try {
                         UUID uuid = UUID.fromString(container.get(key, PersistentDataType.STRING));

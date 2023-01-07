@@ -21,6 +21,7 @@ import wtf.melonthedev.log4minecraft.utils.LoggerUtils;
 import wtf.melonthedev.log4minecraft.Main;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -105,30 +106,25 @@ public class ManageInventoryCommand implements TabExecutor {
 
     public void sendTextInventory(CommandSender sender, Inventory inventory) {
         sender.sendMessage(ChatColor.GOLD + "---- Inventory Backup Viewer -----");
-        /*sender.sendMessage(ChatColor.AQUA + "Armor:");
-            if (stack == null) continue;
-            sender.sendMessage(ChatColor.AQUA + "- " + ChatColor.YELLOW + stack.getAmount() + "x " + ChatColor.AQUA + StringUtils.capitalize(stack.getType().getKey().asString().replaceAll("minecraft:", "").toLowerCase().replaceAll("_", " ")) + " " + getEnchantmentsString(stack.getEnchantments()));
-        }
-        sender.sendMessage(ChatColor.BLUE + "Extra:");
-        for (ItemStack stack : inventory.getExtraContents()) {
-            if (stack == null) continue;
-            sender.sendMessage(ChatColor.BLUE + "- " + ChatColor.YELLOW + stack.getAmount() + "x " + ChatColor.BLUE + StringUtils.capitalize(stack.getType().getKey().asString().replaceAll("minecraft:", "").toLowerCase().replaceAll("_", " ")) + " " + getEnchantmentsString(stack.getEnchantments()));
-        }*/
         sender.sendMessage(ChatColor.GREEN + "Storage:");
         for (ItemStack stack : inventory.getContents()) {
             if (stack == null) continue;
             sender.sendMessage(ChatColor.GREEN + "- " + ChatColor.YELLOW + stack.getAmount() + "x " + ChatColor.GREEN + StringUtils.capitalize(stack.getType().getKey().asString().replaceAll("minecraft:", "").toLowerCase().replaceAll("_", " ")) + " " + getEnchantmentsString(stack.getEnchantments()));
         }
-        /*sender.sendMessage(ChatColor.LIGHT_PURPLE + "EnderChest:");
-        for (ItemStack stack : inventory.getStorageContents()) {
-            if (stack == null) continue;
-            sender.sendMessage(ChatColor.LIGHT_PURPLE + "- " + ChatColor.YELLOW + stack.getAmount() + "x " + ChatColor.LIGHT_PURPLE + StringUtils.capitalize(stack.getType().getKey().asString().replaceAll("minecraft:", "").toLowerCase().replaceAll("_", " ")) + " " + getEnchantmentsString(stack.getEnchantments()));
-        }*/
         sender.sendMessage(ChatColor.GOLD + "----------------------------------");
     }
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        return null;
+        List<String> tab = new ArrayList<>();
+        if (args.length == 1) {
+            tab.addAll(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
+        } else if (args.length == 2) {
+            tab.add("view");
+            tab.add("backup");
+            tab.add("listbackups");
+            tab.add("restorebackup");
+        }
+        return tab;
     }
 }

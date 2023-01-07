@@ -7,7 +7,6 @@ import java.util.List;
 
 public enum Action {
     INTERACT("interacted with"),
-    OPEN("opened"),
     BREAK("broke"),
     PLACE("placed"),
     PICKUP("picked up"),
