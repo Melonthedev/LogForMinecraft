@@ -8,7 +8,7 @@ import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import wtf.melonthedev.log4minecraft.LoggerUtils;
+import wtf.melonthedev.log4minecraft.utils.LoggerUtils;
 import wtf.melonthedev.log4minecraft.Main;
 import wtf.melonthedev.log4minecraft.enums.LogLevel;
 
@@ -55,9 +55,10 @@ public class LogCategoryCommand implements TabExecutor {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         List<String> tab = new ArrayList<>();
+        if (!sender.isOp()) return tab;
         if (args.length == 1) {
-            tab.addAll(Arrays.stream(Material.values()).map(Enum::name).filter(s -> s.startsWith(args[3].toUpperCase())).toList());
-            tab.addAll(Arrays.stream(EntityType.values()).map(Enum::name).filter(s -> s.startsWith(args[3].toUpperCase())).toList());
+            tab.addAll(Arrays.stream(Material.values()).map(Enum::name).filter(s -> s.startsWith(args[0].toUpperCase())).toList());
+            tab.addAll(Arrays.stream(EntityType.values()).map(Enum::name).filter(s -> s.startsWith(args[0].toUpperCase())).toList());
         } else if (args.length == 2) {
             tab.add("NORMAL");
             tab.add("VALUABLE");

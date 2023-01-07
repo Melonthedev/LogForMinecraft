@@ -1,8 +1,15 @@
-package wtf.melonthedev.log4minecraft;
+package wtf.melonthedev.log4minecraft.services;
 
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.inventory.PlayerInventory;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import wtf.melonthedev.log4minecraft.LogEntry;
+import wtf.melonthedev.log4minecraft.Main;
 import wtf.melonthedev.log4minecraft.enums.LogOutput;
+import wtf.melonthedev.log4minecraft.utils.ItemSerializer;
+import wtf.melonthedev.log4minecraft.utils.LoggerUtils;
 
 import java.io.*;
 import java.time.Instant;
@@ -67,7 +74,7 @@ public class MinecraftLogger {
         if (entry.getOwner() != null) log.put("owner", entry.getOwner().getName());
         array.add(log);
         try (FileWriter file = new FileWriter(LoggerUtils.getJsonFile())) {
-            file.write(object.toJSONString()); // data is a JSON string here
+            file.write(object.toJSONString());
             file.flush();
         } catch (IOException e) {
             e.printStackTrace();

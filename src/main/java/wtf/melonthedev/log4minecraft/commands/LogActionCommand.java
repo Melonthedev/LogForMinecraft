@@ -4,7 +4,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import wtf.melonthedev.log4minecraft.enums.Action;
-import wtf.melonthedev.log4minecraft.LoggerUtils;
+import wtf.melonthedev.log4minecraft.utils.LoggerUtils;
 import wtf.melonthedev.log4minecraft.Main;
 
 import java.util.ArrayList;

@@ -22,3 +22,5 @@ commands:
       - searchlog
   logcategory:
     description: Sets a category for specific items and mobs
+  manageinventory:
+    description: Manages inventories

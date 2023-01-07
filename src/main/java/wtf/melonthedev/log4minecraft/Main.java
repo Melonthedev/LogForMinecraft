@@ -29,6 +29,7 @@ public final class Main extends JavaPlugin {
         getCommand("playeractivity").setExecutor(new PlayerActivityCommand());
         getCommand("findevent").setExecutor(new FindEventCommand());
         getCommand("logcategory").setExecutor(new LogCategoryCommand());
+        getCommand("manageinventory").setExecutor(new ManageInventoryCommand());
 
         //Register Listeners
         Bukkit.getPluginManager().registerEvents(new ActionListeners(), this);

@@ -6,13 +6,13 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Container;
 import org.bukkit.block.TileState;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import wtf.melonthedev.log4minecraft.enums.Action;
+import wtf.melonthedev.log4minecraft.services.InventoryBackupService;
+import wtf.melonthedev.log4minecraft.utils.LoggerUtils;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -31,6 +31,7 @@ public class LogEntry {
         this.location = (target != null && target.tryGetLocation() != null) ? target.tryGetLocation() : subject.tryGetLocation();
         this.owner = owner;
         this.handleOwner();
+        this.handleInvBackup();
     }
 
     public LogEntry(@NotNull LogTarget subject, Action action, OfflinePlayer owner) {
@@ -40,6 +41,7 @@ public class LogEntry {
         this.location = subject.tryGetLocation();
         this.owner = owner;
         this.handleOwner();
+        this.handleInvBackup();
     }
 
     public void handleOwner() {
@@ -52,7 +54,7 @@ public class LogEntry {
             PersistentDataContainer container = state.getPersistentDataContainer();
             switch (action) {
                 case PLACE -> container.set(key, PersistentDataType.STRING, getSubject().getEntity().getUniqueId().toString());
-                case INTERACT -> {
+                case INTERACT, BREAK, OPEN -> {
                     if (!container.has(key, PersistentDataType.STRING)) return;
                     try {
                         UUID uuid = UUID.fromString(container.get(key, PersistentDataType.STRING));
@@ -64,6 +66,13 @@ public class LogEntry {
             }
             state.update();
         }
+    }
+
+    public void handleInvBackup() {
+        if ((action != Action.DIE || subject.getActiveType() != LogTarget.TargetType.ENTITY || !(subject.getEntity() instanceof HumanEntity))
+            && (action != Action.KILL || target.getActiveType() != LogTarget.TargetType.ENTITY || !(target.getEntity() instanceof HumanEntity))) return;
+        HumanEntity player = (HumanEntity) (action == Action.DIE ? getSubject().getEntity() : getTarget().getEntity());
+        InventoryBackupService.backupInventory(player);
     }
 
     public String getLogText() {

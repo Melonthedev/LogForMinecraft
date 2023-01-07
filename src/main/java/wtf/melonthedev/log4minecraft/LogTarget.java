@@ -1,6 +1,5 @@
 package wtf.melonthedev.log4minecraft;
 
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -8,8 +7,8 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import wtf.melonthedev.log4minecraft.utils.LoggerUtils;
 
 import javax.annotation.Nullable;
 import java.util.Objects;

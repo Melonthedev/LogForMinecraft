@@ -7,6 +7,7 @@ import org.bukkit.command.TabExecutor;
 import wtf.melonthedev.log4minecraft.*;
 import wtf.melonthedev.log4minecraft.enums.LogLevel;
 import wtf.melonthedev.log4minecraft.enums.LogOutput;
+import wtf.melonthedev.log4minecraft.utils.LoggerUtils;
 
 import java.util.ArrayList;
 import java.util.List;
