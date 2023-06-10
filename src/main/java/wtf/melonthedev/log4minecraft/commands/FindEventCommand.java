@@ -11,6 +11,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import wtf.melonthedev.log4minecraft.LogTarget;
+import wtf.melonthedev.log4minecraft.enums.LogLevel;
 import wtf.melonthedev.log4minecraft.utils.LoggerUtils;
 import wtf.melonthedev.log4minecraft.Main;
 import wtf.melonthedev.log4minecraft.enums.Action;
@@ -41,6 +43,7 @@ public class FindEventCommand implements TabExecutor {
             String y = args.length >= 8 ? args[6] : "*";
             String z = args.length >= 8 ? args[7] : "*";
             String world = args.length >= 9 ? args[8] : "*";
+            //String loglevel = args.length >= 10 ? args[9] : "*";
 
             if (startingDate.equalsIgnoreCase("latest")) {
                 startingDate = Calendar.getInstance().get(Calendar.YEAR) +
@@ -97,6 +100,9 @@ public class FindEventCommand implements TabExecutor {
                     if (!y.equalsIgnoreCase("*") && (loc.get("y") == null || !(String.valueOf(loc.get("y")).equalsIgnoreCase(y)))) continue;
                     if (!z.equalsIgnoreCase("*") && (loc.get("z") == null || !(String.valueOf(loc.get("z")).equalsIgnoreCase(z)))) continue;
                     if (!world.equalsIgnoreCase("*") && (loc.get("w") == null || !((String) loc.get("w")).equalsIgnoreCase(world))) continue;
+                    /*if (!loglevel.equalsIgnoreCase("*") && LoggerUtils.isValidLogLevel(loglevel)
+                            && (log.get("target") == null || LoggerUtils.isValidForLogLevel((String) log.get("target"), LogLevel.valueOf(loglevel)))
+                            && LoggerUtils.isValidForLogLevel((String) log.get("subject"), LogLevel.valueOf(loglevel))) continue;*/
 
                     sender.sendMessage(ChatColor.GRAY + Instant.ofEpochSecond((long) log.get("created")).toString() + ChatColor.GOLD
                             + " - " + log.get("subject") + " " + ChatColor.AQUA

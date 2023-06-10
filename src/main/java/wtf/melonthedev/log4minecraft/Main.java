@@ -2,10 +2,9 @@ package wtf.melonthedev.log4minecraft;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
 import wtf.melonthedev.log4minecraft.commands.*;
+import wtf.melonthedev.log4minecraft.services.PlayerActivityService;
 
 import java.util.logging.Level;
 
@@ -14,6 +13,10 @@ public final class Main extends JavaPlugin {
     public static String prefix = ChatColor.BOLD + ChatColor.AQUA.toString() + "[Log4MC] " + ChatColor.YELLOW;
     private static JavaPlugin plugin;
     public static boolean useExactLocations = false;
+    public static boolean createInvBackupOnDeath = true;
+    public static boolean createInvBackupOnLeave = false;
+    public static boolean logActionsInPlayersInventory = false;
+    public static boolean logNonContainerBlockRightClicks = true;
 
     @Override
     public void onEnable() {
@@ -34,27 +37,17 @@ public final class Main extends JavaPlugin {
         //Register Listeners
         Bukkit.getPluginManager().registerEvents(new ActionListeners(), this);
 
-
-        /*for (Material material : Material.values()) {
-            try {
-                getLogger().log(Level.INFO, material.getKey().toString().replaceAll("minecraft:", "") + ": normal");
-            } catch (Exception e) {
-                continue;
-            }
-        }
-        for (EntityType material : EntityType.values()) {
-            try {
-                getLogger().log(Level.INFO, material.getKey().toString().replaceAll("minecraft:", "") + ": normal");
-            } catch (Exception e) {
-                continue;
-            }
-        }*/
+        PlayerActivityService.handlePlayerActivitySystem();
     }
 
 
     public void handleConfig() {
         saveDefaultConfig();
         useExactLocations = getConfig().getBoolean("useExactLocations", false);
+        createInvBackupOnDeath = getConfig().getBoolean("createInventoryBackups.onDeath", true);
+        createInvBackupOnLeave = getConfig().getBoolean("createInventoryBackups.onLeave", false);
+        logActionsInPlayersInventory = getConfig().getBoolean("logActionsInPlayersInventory", false);
+        logNonContainerBlockRightClicks = getConfig().getBoolean("logNonContainerBlockRightClicks", true);
     }
 
     @Override

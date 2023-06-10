@@ -3,6 +3,14 @@
 # X: 53.4383465 <-> X: 53
 useExactLocations: false
 
+logActionsInPlayersInventory: false
+
+logNonContainerBlockRightClicks: true
+
+createInventoryBackups:
+  onDeath: true
+  onLeave: false
+
 logOutputLevels:
   CONSOLE: VALUABLE
   TEXTFILE: VALUABLE
@@ -283,7 +291,7 @@ logLevels: # Set between normal/disabled/detailed/valuable
   purpur_pillar: normal
   purpur_stairs: normal
   spawner: normal
-  chest: normal
+  chest: valuable
   crafting_table: normal
   farmland: normal
   furnace: normal
@@ -945,8 +953,8 @@ logLevels: # Set between normal/disabled/detailed/valuable
   chicken: detailed
   cooked_chicken: detailed
   rotten_flesh: detailed
-  ender_pearl: normal
-  blaze_rod: normal
+  ender_pearl: valuable
+  blaze_rod: valuable
   ghast_tear: normal
   gold_nugget: normal
   nether_wart: normal
@@ -956,86 +964,86 @@ logLevels: # Set between normal/disabled/detailed/valuable
   fermented_spider_eye: normal
   blaze_powder: normal
   magma_cream: normal
-  brewing_stand: normal
-  cauldron: normal
-  ender_eye: normal
+  brewing_stand: valuable
+  cauldron: valuable
+  ender_eye: valuable
   glistering_melon_slice: normal
-  allay_spawn_egg: normal
-  axolotl_spawn_egg: normal
-  bat_spawn_egg: normal
-  bee_spawn_egg: normal
-  blaze_spawn_egg: normal
-  cat_spawn_egg: normal
-  camel_spawn_egg: normal
-  cave_spider_spawn_egg: normal
-  chicken_spawn_egg: normal
-  cod_spawn_egg: normal
-  cow_spawn_egg: normal
-  creeper_spawn_egg: normal
-  dolphin_spawn_egg: normal
-  donkey_spawn_egg: normal
-  drowned_spawn_egg: normal
-  elder_guardian_spawn_egg: normal
-  ender_dragon_spawn_egg: normal
-  enderman_spawn_egg: normal
-  endermite_spawn_egg: normal
-  evoker_spawn_egg: normal
-  fox_spawn_egg: normal
-  frog_spawn_egg: normal
-  ghast_spawn_egg: normal
-  glow_squid_spawn_egg: normal
-  goat_spawn_egg: normal
-  guardian_spawn_egg: normal
-  hoglin_spawn_egg: normal
-  horse_spawn_egg: normal
-  husk_spawn_egg: normal
-  iron_golem_spawn_egg: normal
-  llama_spawn_egg: normal
-  magma_cube_spawn_egg: normal
-  mooshroom_spawn_egg: normal
-  mule_spawn_egg: normal
-  ocelot_spawn_egg: normal
-  panda_spawn_egg: normal
-  parrot_spawn_egg: normal
-  phantom_spawn_egg: normal
-  pig_spawn_egg: normal
-  piglin_spawn_egg: normal
-  piglin_brute_spawn_egg: normal
-  pillager_spawn_egg: normal
-  polar_bear_spawn_egg: normal
-  pufferfish_spawn_egg: normal
-  rabbit_spawn_egg: normal
-  ravager_spawn_egg: normal
-  salmon_spawn_egg: normal
-  sheep_spawn_egg: normal
-  shulker_spawn_egg: normal
-  silverfish_spawn_egg: normal
-  skeleton_spawn_egg: normal
-  skeleton_horse_spawn_egg: normal
-  slime_spawn_egg: normal
-  snow_golem_spawn_egg: normal
-  spider_spawn_egg: normal
-  squid_spawn_egg: normal
-  stray_spawn_egg: normal
-  strider_spawn_egg: normal
-  tadpole_spawn_egg: normal
-  trader_llama_spawn_egg: normal
-  tropical_fish_spawn_egg: normal
-  turtle_spawn_egg: normal
-  vex_spawn_egg: normal
-  villager_spawn_egg: normal
-  vindicator_spawn_egg: normal
-  wandering_trader_spawn_egg: normal
-  warden_spawn_egg: normal
-  witch_spawn_egg: normal
-  wither_spawn_egg: normal
-  wither_skeleton_spawn_egg: normal
-  wolf_spawn_egg: normal
-  zoglin_spawn_egg: normal
-  zombie_spawn_egg: normal
-  zombie_horse_spawn_egg: normal
-  zombie_villager_spawn_egg: normal
-  zombified_piglin_spawn_egg: normal
+  allay_spawn_egg: valuable
+  axolotl_spawn_egg: valuable
+  bat_spawn_egg: valuable
+  bee_spawn_egg: valuable
+  blaze_spawn_egg: valuable
+  cat_spawn_egg: valuable
+  camel_spawn_egg: valuable
+  cave_spider_spawn_egg: valuable
+  chicken_spawn_egg: valuable
+  cod_spawn_egg: valuable
+  cow_spawn_egg: valuable
+  creeper_spawn_egg: valuable
+  dolphin_spawn_egg: valuable
+  donkey_spawn_egg: valuable
+  drowned_spawn_egg: valuable
+  elder_guardian_spawn_egg: valuable
+  ender_dragon_spawn_egg: valuable
+  enderman_spawn_egg: valuable
+  endermite_spawn_egg: valuable
+  evoker_spawn_egg: valuable
+  fox_spawn_egg: valuable
+  frog_spawn_egg: valuable
+  ghast_spawn_egg: valuable
+  glow_squid_spawn_egg: valuable
+  goat_spawn_egg: valuable
+  guardian_spawn_egg: valuable
+  hoglin_spawn_egg: valuable
+  horse_spawn_egg: valuable
+  husk_spawn_egg: valuable
+  iron_golem_spawn_egg: valuable
+  llama_spawn_egg: valuable
+  magma_cube_spawn_egg: valuable
+  mooshroom_spawn_egg: valuable
+  mule_spawn_egg: valuable
+  ocelot_spawn_egg: valuable
+  panda_spawn_egg: valuable
+  parrot_spawn_egg: valuable
+  phantom_spawn_egg: valuable
+  pig_spawn_egg: valuable
+  piglin_spawn_egg: valuable
+  piglin_brute_spawn_egg: valuable
+  pillager_spawn_egg: valuable
+  polar_bear_spawn_egg: valuable
+  pufferfish_spawn_egg: valuable
+  rabbit_spawn_egg: valuable
+  ravager_spawn_egg: valuable
+  salmon_spawn_egg: valuable
+  sheep_spawn_egg: valuable
+  shulker_spawn_egg: valuable
+  silverfish_spawn_egg: valuable
+  skeleton_spawn_egg: valuable
+  skeleton_horse_spawn_egg: valuable
+  slime_spawn_egg: valuable
+  snow_golem_spawn_egg: valuable
+  spider_spawn_egg: valuable
+  squid_spawn_egg: valuable
+  stray_spawn_egg: valuable
+  strider_spawn_egg: valuable
+  tadpole_spawn_egg: valuable
+  trader_llama_spawn_egg: valuable
+  tropical_fish_spawn_egg: valuable
+  turtle_spawn_egg: valuable
+  vex_spawn_egg: valuable
+  villager_spawn_egg: valuable
+  vindicator_spawn_egg: valuable
+  wandering_trader_spawn_egg: valuable
+  warden_spawn_egg: valuable
+  witch_spawn_egg: valuable
+  wither_spawn_egg: valuable
+  wither_skeleton_spawn_egg: valuable
+  wolf_spawn_egg: valuable
+  zoglin_spawn_egg: valuable
+  zombie_spawn_egg: valuable
+  zombie_horse_spawn_egg: valuable
+  zombie_villager_spawn_egg: valuable
+  zombified_piglin_spawn_egg: valuable
   experience_bottle: normal
   fire_charge: normal
   writable_book: normal
@@ -1108,7 +1116,7 @@ logLevels: # Set between normal/disabled/detailed/valuable
   lingering_potion: valuable
   shield: normal
   totem_of_undying: normal
-  shulker_shell: normal
+  shulker_shell: valuable
   iron_nugget: normal
   knowledge_book: valuable
   debug_stick: valuable
@@ -1143,7 +1151,7 @@ logLevels: # Set between normal/disabled/detailed/valuable
   piglin_banner_pattern: normal
   goat_horn: valuable
   composter: normal
-  barrel: normal
+  barrel: valuable
   smoker: normal
   blast_furnace: normal
   cartography_table: normal
@@ -1392,7 +1400,7 @@ logLevels: # Set between normal/disabled/detailed/valuable
   witch: normal
   endermite: normal
   guardian: normal
-  shulker: normal
+  shulker: valuable
   pig: normal
   sheep: normal
   cow: normal

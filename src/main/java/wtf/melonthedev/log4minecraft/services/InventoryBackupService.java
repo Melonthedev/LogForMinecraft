@@ -8,7 +8,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import wtf.melonthedev.log4minecraft.InventoryBackup;
 import wtf.melonthedev.log4minecraft.utils.ConfigurationSerializableAdapter;
 import wtf.melonthedev.log4minecraft.utils.ItemSerializer;
@@ -53,10 +52,6 @@ public class InventoryBackupService {
     }
 
     public static List<InventoryBackup> getInventoryBackups() {
-        final Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .disableHtmlEscaping()
-                .registerTypeHierarchyAdapter(ConfigurationSerializable.class, new ConfigurationSerializableAdapter()).create();
         List<InventoryBackup> backups = new ArrayList<>();
         JSONObject object = LoggerUtils.getJsonObjFromFile();
         if (!object.containsKey("inventories"))
@@ -64,11 +59,9 @@ public class InventoryBackupService {
         JSONArray array = (JSONArray) object.get("inventories");
         for (Object o : array) {
             JSONObject inventory = (JSONObject) o;
-            //JSONArray contents = (JSONArray) inventory.get("contents");
             UUID uuid = UUID.fromString((String) inventory.get("owner"));
             long created = (long) inventory.get("created");
             int id = (int)((long) inventory.get("id"));
-            //ItemStack[] items = gson.fromJson(contents.toJSONString(), ItemStack[].class);
             ItemStack[] items = ItemSerializer.stringToItems((String) inventory.get("contents"));
             InventoryBackup backup = new InventoryBackup(id, items, uuid, created);
             backups.add(backup);

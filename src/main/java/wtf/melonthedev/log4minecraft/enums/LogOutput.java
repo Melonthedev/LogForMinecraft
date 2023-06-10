@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum LogOutput {
-
     CONSOLE, TEXTFILE, FILE;
 
     public static List<String> names() {

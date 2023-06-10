@@ -15,9 +15,6 @@ import java.util.Map;
 
 public class ItemSerializer {
 
-    /*
-     * @author ElDzi
-     */
     public static String itemsToString(ItemStack[] items) {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();

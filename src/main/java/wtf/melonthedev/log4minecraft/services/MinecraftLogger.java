@@ -1,14 +1,10 @@
 package wtf.melonthedev.log4minecraft.services;
 
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.inventory.PlayerInventory;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import wtf.melonthedev.log4minecraft.LogEntry;
 import wtf.melonthedev.log4minecraft.Main;
 import wtf.melonthedev.log4minecraft.enums.LogOutput;
-import wtf.melonthedev.log4minecraft.utils.ItemSerializer;
 import wtf.melonthedev.log4minecraft.utils.LoggerUtils;
 
 import java.io.*;

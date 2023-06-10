@@ -94,21 +94,24 @@ public class LoggerUtils {
     }
     public static boolean isValidForLogLevel(LogTarget target, LogLevel level) {
         if (target == null) return true;
+        return isValidForLogLevel(target.getKey(), level);
+    }
+    public static boolean isValidForLogLevel(String key, LogLevel level) {
         switch (level) {
             case DISABLED -> {
                 return false;
             }
             case VALUABLE -> {
-                return getLevel(target.getKey()) == LogLevel.VALUABLE;
+                return getLevel(key) == LogLevel.VALUABLE;
             }
             case NORMAL -> {
-                return getLevel(target.getKey()) == LogLevel.VALUABLE
-                        || getLevel(target.getKey()) == LogLevel.NORMAL;
+                return getLevel(key) == LogLevel.VALUABLE
+                        || getLevel(key) == LogLevel.NORMAL;
             }
             case DETAILED -> {
-                return getLevel(target.getKey()) == LogLevel.VALUABLE
-                        || getLevel(target.getKey()) == LogLevel.NORMAL
-                        || getLevel(target.getKey()) == LogLevel.DETAILED;
+                return getLevel(key) == LogLevel.VALUABLE
+                        || getLevel(key) == LogLevel.NORMAL
+                        || getLevel(key) == LogLevel.DETAILED;
             }
             case EVERYTHING -> {
                 return true;
@@ -180,6 +183,14 @@ public class LoggerUtils {
             Integer.parseInt(s);
             return true;
         } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+    public static boolean isValidLogLevel(String s) {
+        try {
+            LogLevel.valueOf(s);
+            return true;
+        } catch (IllegalArgumentException e) {
             return false;
         }
     }

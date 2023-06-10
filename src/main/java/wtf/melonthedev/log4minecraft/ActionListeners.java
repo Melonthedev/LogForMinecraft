@@ -3,6 +3,9 @@ package wtf.melonthedev.log4minecraft;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.block.Container;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -15,18 +18,24 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.persistence.PersistentDataType;
 import wtf.melonthedev.log4minecraft.enums.Action;
+import wtf.melonthedev.log4minecraft.services.InventoryBackupService;
 import wtf.melonthedev.log4minecraft.services.MinecraftLogger;
+import wtf.melonthedev.log4minecraft.services.PlayerActivityService;
 
 public class ActionListeners implements Listener {
 
     @EventHandler
     public void onContainerInteract(PlayerInteractEvent event) {
-        if (event.getClickedBlock() == null || event.getAction() == org.bukkit.event.block.Action.LEFT_CLICK_BLOCK || event.getHand() == EquipmentSlot.OFF_HAND) return;
+        if (event.getClickedBlock() == null
+                || event.getAction() == org.bukkit.event.block.Action.LEFT_CLICK_BLOCK
+                || event.getHand() == EquipmentSlot.OFF_HAND
+                || (!(event.getClickedBlock().getState() instanceof Container) && !Main.logNonContainerBlockRightClicks)) return;
         MinecraftLogger.log(new LogEntry(
                 new LogTarget(event.getPlayer()),
                 Action.INTERACT,
@@ -36,12 +45,6 @@ public class ActionListeners implements Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (event.getBlock().getState() instanceof PersistentDataHolder) {
-            PersistentDataContainer container = ((PersistentDataHolder) event.getBlock().getState()).getPersistentDataContainer();
-            container.set(new NamespacedKey(Main.getPlugin(), "owner"), PersistentDataType.STRING, event.getPlayer().getUniqueId().toString());
-            System.out.println(event.getBlock().getState().update());
-            System.out.println("SET OWNER: " + event.getPlayer().getUniqueId() + " " + event.getBlock().getState());
-        }
         MinecraftLogger.log(new LogEntry(
                 new LogTarget(event.getPlayer()),
                 Action.PLACE,
@@ -57,6 +60,7 @@ public class ActionListeners implements Listener {
                 Action.BREAK,
                 new LogTarget(event.getBlock()),
                 null));
+        PlayerActivityService.handleBlockBreak(event.getPlayer(), event.getBlock());
     }
 
     @EventHandler
@@ -71,7 +75,10 @@ public class ActionListeners implements Listener {
 
     @EventHandler
     public void onItemPickup(EntityPickupItemEvent event) {
-        OfflinePlayer owner = event.getItem().getOwner() == null ? (event.getItem().getThrower() == null ? null : Bukkit.getOfflinePlayer(event.getItem().getThrower())) : Bukkit.getOfflinePlayer(event.getItem().getOwner());
+        OfflinePlayer owner = event.getItem().getOwner() == null
+                ? (event.getItem().getThrower() == null ? null
+                : Bukkit.getOfflinePlayer(event.getItem().getThrower()))
+                : Bukkit.getOfflinePlayer(event.getItem().getOwner());
         MinecraftLogger.log(new LogEntry(
                 new LogTarget(event.getEntity()),
                 Action.PICKUP,
@@ -99,7 +106,10 @@ public class ActionListeners implements Listener {
 
     @EventHandler
     public void onItemDespawn(ItemDespawnEvent event) {
-        OfflinePlayer owner = event.getEntity().getOwner() == null ? (event.getEntity().getThrower() == null ? null : Bukkit.getOfflinePlayer(event.getEntity().getThrower())) : Bukkit.getOfflinePlayer(event.getEntity().getOwner());
+        OfflinePlayer owner = event.getEntity().getOwner() == null
+                ? (event.getEntity().getThrower() == null ? null
+                : Bukkit.getOfflinePlayer(event.getEntity().getThrower()))
+                : Bukkit.getOfflinePlayer(event.getEntity().getOwner());
         MinecraftLogger.log(new LogEntry(
                 new LogTarget(event.getEntity()),
                 Action.DESPAWN,
@@ -121,5 +131,14 @@ public class ActionListeners implements Listener {
         LogTarget target = event.getEntity().getKiller() == null ? null : new LogTarget(event.getEntity());
         Action action = event.getEntity().getKiller() == null ? Action.DIE : Action.KILL;
         MinecraftLogger.log(new LogEntry(subject, action, target, null));
+
+        if (!(event.getEntity() instanceof HumanEntity) || !Main.createInvBackupOnDeath) return;
+        InventoryBackupService.backupInventory(((HumanEntity) event.getEntity()));
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        if (!Main.createInvBackupOnLeave) return;
+        InventoryBackupService.backupInventory(event.getPlayer());
     }
 }

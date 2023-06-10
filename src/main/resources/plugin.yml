@@ -3,7 +3,7 @@ version: '${project.version}'
 main: wtf.melonthedev.log4minecraft.Main
 api-version: 1.19
 authors: [ Melonthedev ]
-description: A customizable logger for minecraft with console logging - logging to a textfile - logging to a file which can be inspected and viewed with the loginspector
+description: A customizable logger for minecraft with console logging - logging to a textfile - logging to a file which can be inspected and viewed with several commands - inventory backup system
 
 commands:
   loglevel:
@@ -11,16 +11,16 @@ commands:
   logaction:
     description: Set the actions that should be logged [Team Only]
   playeractivity:
-    description: Check the player activity of a player
+    description: Detect suspicious playeractivity [Team Only]
     aliases:
       - checksusplayeractivity
       - checkplayeractivity
   findevent:
-    description: Find a log entry
+    description: Find a log entry [Team Only]
     aliases:
       - findlog
       - searchlog
   logcategory:
-    description: Sets a category for specific items and mobs
+    description: Sets a category for specific items and mobs [Team Only]
   manageinventory:
-    description: Manages inventories
+    description: Manages inventories, creates and restores backups [Team Only]
