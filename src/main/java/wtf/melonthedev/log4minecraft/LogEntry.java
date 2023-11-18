@@ -78,7 +78,7 @@ public class LogEntry {
     public String getLogText() {
         return LoggerUtils.getDateTimeString()
                 + subject.getLabel() + " "
-                + action.getString()
+                + action.getDisplayedString()
                 + (target != null ? " " + target.getLabel() : "")
                 + (location != null ? " at X: " + (Main.useExactLocations ? location.getX() : location.getBlockX())
                 + " Y: " + (Main.useExactLocations ? location.getY() : location.getBlockY())

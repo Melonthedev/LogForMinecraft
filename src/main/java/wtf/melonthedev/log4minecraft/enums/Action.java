@@ -25,7 +25,7 @@ public enum Action {
         string = displayedString;
     }
 
-    public String getString() {
+    public String getDisplayedString() {
         return string;
     }
 
@@ -36,9 +36,8 @@ public enum Action {
 
     public static List<String> names() {
         List<String> names = new ArrayList<>();
-        for (Action action : Action.values()) {
+        for (Action action : Action.values())
             names.add(action.name());
-        }
         return names;
     }
 

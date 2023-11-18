@@ -8,9 +8,8 @@ public enum LogLevel {
 
     public static List<String> names() {
         List<String> names = new ArrayList<>();
-        for (LogLevel level : LogLevel.values()) {
+        for (LogLevel level : LogLevel.values())
             names.add(level.name());
-        }
         return names;
     }
 }

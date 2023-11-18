@@ -8,9 +8,8 @@ public enum LogOutput {
 
     public static List<String> names() {
         List<String> names = new ArrayList<>();
-        for (LogOutput output : LogOutput.values()) {
+        for (LogOutput output : LogOutput.values())
             names.add(output.name());
-        }
         return names;
     }
 

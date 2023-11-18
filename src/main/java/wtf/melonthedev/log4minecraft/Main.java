@@ -4,6 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import wtf.melonthedev.log4minecraft.commands.*;
+import wtf.melonthedev.log4minecraft.services.JsonFile;
+import wtf.melonthedev.log4minecraft.services.MinecraftLogger;
 import wtf.melonthedev.log4minecraft.services.PlayerActivityService;
 
 import java.util.logging.Level;
@@ -12,6 +14,7 @@ public final class Main extends JavaPlugin {
 
     public static String prefix = ChatColor.BOLD + ChatColor.AQUA.toString() + "[Log4MC] " + ChatColor.YELLOW;
     private static JavaPlugin plugin;
+    public static JsonFile logFile;
     public static boolean useExactLocations = false;
     public static boolean createInvBackupOnDeath = true;
     public static boolean createInvBackupOnLeave = false;
@@ -26,9 +29,11 @@ public final class Main extends JavaPlugin {
         getLogger().log(Level.INFO, "Log4Minecraft");
         getLogger().log(Level.INFO, "*************");
         handleConfig();
+        initLogFile();
+        MinecraftLogger.init();
 
         //Register Commands
-        getCommand("loglevel").setExecutor(new LogLevelCommand());
+        getCommand("logoutput").setExecutor(new LogOutputCommand());
         getCommand("logaction").setExecutor(new LogActionCommand());
         getCommand("playeractivity").setExecutor(new PlayerActivityCommand());
         getCommand("findevent").setExecutor(new FindEventCommand());
@@ -50,6 +55,11 @@ public final class Main extends JavaPlugin {
         logActionsInPlayersInventory = getConfig().getBoolean("logActionsInPlayersInventory", false);
         logNonContainerBlockRightClicks = getConfig().getBoolean("logNonContainerBlockRightClicks", true);
         checkSusPlayerActivity = getConfig().getBoolean("checkSusPlayerActivity", true);
+    }
+
+
+    public void initLogFile() {
+        logFile = new JsonFile();
     }
 
     @Override

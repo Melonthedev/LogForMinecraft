@@ -65,9 +65,8 @@ public class LoggerUtils {
         Main.getPlugin().saveConfig();
     }
     public static LogLevel getLogLevel(LogOutput output) {
-        if (!Main.getPlugin().getConfig().contains("logOutputLevels." + output.name())) {
+        if (!Main.getPlugin().getConfig().contains("logOutputLevels." + output.name()))
             setLogLevel(output, LogLevel.NORMAL);
-        }
         return LogLevel.valueOf(Main.getPlugin().getConfig().getString("logOutputLevels." + output.name()));
     }
     public static void setLogAction(Action action, boolean log) {
@@ -121,10 +120,10 @@ public class LoggerUtils {
     }
 
     //IO Methods
-    public static JSONObject getJsonObjFromLogFile() {
+    /*public static JSONObject getJsonObjFromLogFile() {
         File file = getLogJsonFile();
         return getJsonObject(file);
-    }
+    }*/
     public static JSONObject getJsonObjFromInvBackupFile() {
         File file = getInvBackupJsonFile();
         return getJsonObject(file);
@@ -146,12 +145,12 @@ public class LoggerUtils {
         }
         return null;
     }
-    public static File getLogJsonFile() {
+    /*public static File getLogJsonFile() {
         String name = "log4minecraft-" + Calendar.getInstance().get(Calendar.YEAR) +
                 "-" + getWithZeros(Calendar.getInstance().get(Calendar.MONTH) + 1) +
                 "-" + getWithZeros(Calendar.getInstance().get(Calendar.DAY_OF_MONTH)) + ".json";
         return getJsonFile(name, "logs");
-    }
+    }*/
     public static File getInvBackupJsonFile() {
         String name = "log4minecraft-inventorybackups.json";
         return getJsonFile(name, "invbackups");

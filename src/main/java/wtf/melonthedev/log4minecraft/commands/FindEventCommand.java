@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FindEventCommand implements TabExecutor {
 
@@ -106,9 +107,9 @@ public class FindEventCommand implements TabExecutor {
 
                     sender.sendMessage(ChatColor.GRAY + Instant.ofEpochSecond((long) log.get("created")).toString() + ChatColor.GOLD
                             + " - " + log.get("subject") + " " + ChatColor.AQUA
-                            + log.get("action") + " " + ChatColor.RED
-                            + (log.get("target") != null ? log.get("target") : "") + " " + ChatColor.YELLOW
-                            + (loc != null ? "X: " + loc.get("x") + " Y: " + loc.get("y") + " Z: " + loc.get("z") + " W: " + loc.get("w") : "")
+                            + Action.valueOf(log.get("action").toString()).getDisplayedString()  + " " + ChatColor.RED
+                            + (log.get("target") != null ? log.get("target") + " " : "") + ChatColor.YELLOW
+                            + (loc != null ? "at X: " + loc.get("x") + " Y: " + loc.get("y") + " Z: " + loc.get("z") + " W: " + loc.get("w") : "")
                             + (log.get("owner") != null ? ChatColor.LIGHT_PURPLE + " Owner: " + log.get("owner") : ""));
                 }
             }
@@ -129,10 +130,11 @@ public class FindEventCommand implements TabExecutor {
                     "-" + LoggerUtils.getWithZeros(Calendar.getInstance().get(Calendar.DAY_OF_MONTH)));
         } else if (args.length == 2) {
             tab.add("*");
-            tab.addAll(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
+            tab.addAll(Bukkit.getOnlinePlayers().stream().map(Player::getName).filter(s -> s.toLowerCase().startsWith(args[1].toLowerCase())).toList());
+            tab.addAll(Arrays.stream(EntityType.values()).map(Enum::name).filter(s -> s.toLowerCase().startsWith(args[1].toLowerCase())).toList());
         } else if (args.length == 3) {
             tab.add("*");
-            tab.addAll(Action.names().stream().filter(s -> !s.equalsIgnoreCase("all")).toList());
+            tab.addAll(Action.names().stream().filter(s -> !s.equalsIgnoreCase("all")).filter(s -> s.startsWith(args[2].toUpperCase())).toList());
         } else if (args.length == 4) {
             tab.add("*");
             tab.addAll(Arrays.stream(Material.values()).map(Enum::name).filter(s -> s.startsWith(args[3].toUpperCase())).toList());
