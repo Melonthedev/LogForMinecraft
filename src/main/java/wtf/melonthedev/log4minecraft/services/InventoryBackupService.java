@@ -24,18 +24,18 @@ import java.util.UUID;
 public class InventoryBackupService {
     public static void backupInventory(HumanEntity player) {
         PlayerInventory inv = player.getInventory();
-        JSONObject object = LoggerUtils.getJsonObjFromFile();
-        if (!object.containsKey("inventories"))
-            object.put("inventories", new JSONArray());
-        JSONArray array = (JSONArray) object.get("inventories");
+        JSONObject object = LoggerUtils.getJsonObjFromInvBackupFile();
+        if (!object.containsKey("invbackups"))
+            object.put("invbackups", new JSONArray());
+        JSONArray array = (JSONArray) object.get("invbackups");
         JSONObject inventory = new JSONObject();
         inventory.put("contents", ItemSerializer.itemsToString(inv.getContents()));
         inventory.put("created", Instant.now().getEpochSecond());
         inventory.put("owner", player.getUniqueId().toString());
         inventory.put("id", (int)((int) getInventoryBackups(player.getUniqueId()).size() + 1));
         array.add(inventory);
-        object.put("inventories", array);
-        try (FileWriter file = new FileWriter(LoggerUtils.getJsonFile())) {
+        object.put("invbackups", array);
+        try (FileWriter file = new FileWriter(LoggerUtils.getInvBackupJsonFile())) {
             file.write(object.toJSONString());
             file.flush();
         } catch (IOException e) {
@@ -53,10 +53,10 @@ public class InventoryBackupService {
 
     public static List<InventoryBackup> getInventoryBackups() {
         List<InventoryBackup> backups = new ArrayList<>();
-        JSONObject object = LoggerUtils.getJsonObjFromFile();
-        if (!object.containsKey("inventories"))
-            object.put("inventories", new JSONArray());
-        JSONArray array = (JSONArray) object.get("inventories");
+        JSONObject object = LoggerUtils.getJsonObjFromInvBackupFile();
+        if (!object.containsKey("invbackups"))
+            object.put("invbackups", new JSONArray());
+        JSONArray array = (JSONArray) object.get("invbackups");
         for (Object o : array) {
             JSONObject inventory = (JSONObject) o;
             UUID uuid = UUID.fromString((String) inventory.get("owner"));

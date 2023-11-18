@@ -121,12 +121,16 @@ public class LoggerUtils {
     }
 
     //IO Methods
-    public static JSONObject getJsonObjFromFile() {
-        File file = getJsonFile();
+    public static JSONObject getJsonObjFromLogFile() {
+        File file = getLogJsonFile();
+        return getJsonObject(file);
+    }
+    public static JSONObject getJsonObjFromInvBackupFile() {
+        File file = getInvBackupJsonFile();
         return getJsonObject(file);
     }
     public static JSONObject getJsonObjFromFile(String fileName) {
-        File file = getJsonFile(fileName);
+        File file = getJsonFile(fileName, "logs");
         return getJsonObject(file);
     }
     @Nullable
@@ -136,26 +140,30 @@ public class LoggerUtils {
         {
             Object obj = jsonParser.parse(reader);
             JSONObject jo = (JSONObject) obj;
-            //System.out.println(jo);
             return jo;
         } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
         return null;
     }
-    public static File getJsonFile() {
+    public static File getLogJsonFile() {
         String name = "log4minecraft-" + Calendar.getInstance().get(Calendar.YEAR) +
                 "-" + getWithZeros(Calendar.getInstance().get(Calendar.MONTH) + 1) +
                 "-" + getWithZeros(Calendar.getInstance().get(Calendar.DAY_OF_MONTH)) + ".json";
-        return getJsonFile(name);
+        return getJsonFile(name, "logs");
     }
-    public static File getJsonFile(String name) {
+    public static File getInvBackupJsonFile() {
+        String name = "log4minecraft-inventorybackups.json";
+        return getJsonFile(name, "invbackups");
+    }
+
+    public static File getJsonFile(String name, String jsonRoot) {
         File file = getExistingJsonFile(name);
         if (!file.exists()) {
             try {
                 file.createNewFile();
                 try (FileWriter fw = new FileWriter(file)) {
-                    fw.write("{\"logs\" : []}");
+                    fw.write("{\"" + jsonRoot + "\" : []}");
                     fw.flush();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -166,6 +174,7 @@ public class LoggerUtils {
         }
         return file;
     }
+
     public static File getExistingJsonFile(String name) {
         return new File(Main.getPlugin().getDataFolder(), name);
     }
