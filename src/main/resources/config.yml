@@ -7,6 +7,8 @@ logActionsInPlayersInventory: false
 
 logNonContainerBlockRightClicks: true
 
+checkSusPlayerActivity: true
+
 createInventoryBackups:
   onDeath: true
   onLeave: false

@@ -9,6 +9,7 @@ import wtf.melonthedev.log4minecraft.enums.OreActivity;
 
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class PlayerActivityService {
 
@@ -16,6 +17,10 @@ public class PlayerActivityService {
 
 
     public static void handlePlayerActivitySystem() {
+        if (!Main.checkSusPlayerActivity) {
+            Main.getPlugin().getLogger().log(Level.INFO, "PlayerActivityService not running.");
+            return;
+        }
         new BukkitRunnable() {
             @Override
             public void run() {

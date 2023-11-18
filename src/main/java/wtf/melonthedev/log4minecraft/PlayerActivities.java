@@ -43,7 +43,7 @@ public class PlayerActivities {
                 if (oreBreak.get(ore) < ore.lightSusBlockBreakCount) color = ChatColor.GREEN;
                 else if (oreBreak.get(ore) < ore.mediumSusBlockBreakCount) color = ChatColor.YELLOW;
                 else color = ChatColor.RED;
-                builder.append(ChatColor.BOLD).append("- ").append(ChatColor.LIGHT_PURPLE).append(ore.displayName).append(": ").append(color).append(oreBreak.get(ore)).append("\n");
+                builder.append(ChatColor.WHITE).append("- ").append(ChatColor.LIGHT_PURPLE).append(ore.displayName).append(": ").append(color).append(oreBreak.get(ore)).append("\n");
             }
         }
         return builder.toString();

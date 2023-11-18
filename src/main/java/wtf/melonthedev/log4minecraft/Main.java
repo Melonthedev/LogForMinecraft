@@ -17,6 +17,7 @@ public final class Main extends JavaPlugin {
     public static boolean createInvBackupOnLeave = false;
     public static boolean logActionsInPlayersInventory = false;
     public static boolean logNonContainerBlockRightClicks = true;
+    public static boolean checkSusPlayerActivity = true;
 
     @Override
     public void onEnable() {
@@ -48,6 +49,7 @@ public final class Main extends JavaPlugin {
         createInvBackupOnLeave = getConfig().getBoolean("createInventoryBackups.onLeave", false);
         logActionsInPlayersInventory = getConfig().getBoolean("logActionsInPlayersInventory", false);
         logNonContainerBlockRightClicks = getConfig().getBoolean("logNonContainerBlockRightClicks", true);
+        checkSusPlayerActivity = getConfig().getBoolean("checkSusPlayerActivity", true);
     }
 
     @Override
