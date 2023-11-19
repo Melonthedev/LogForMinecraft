@@ -22,43 +22,34 @@ public class ItemSerializer {
             oos.writeObject(serializeItemStack(items));
             oos.flush();
             return Base64.getEncoder().encodeToString(bos.toByteArray());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return "";
     }
 
+    @SuppressWarnings("unchecked")
     public static ItemStack[] stringToItems(String s) {
         try {
-            ByteArrayInputStream bis = new ByteArrayInputStream(
-                    Base64.getDecoder().decode(s));
+            ByteArrayInputStream bis = new ByteArrayInputStream(Base64.getDecoder().decode(s));
             ObjectInputStream ois = new ObjectInputStream(bis);
-            return deserializeItemStack(
-                    (Map<String, Object>[]) ois.readObject());
-        }
-        catch (Exception e) {
+            return deserializeItemStack((Map<String, Object>[]) ois.readObject());
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return new ItemStack[] {
-                new ItemStack(Material.AIR) };
+        return new ItemStack[] { new ItemStack(Material.AIR) };
     }
 
     @SuppressWarnings("unchecked")
     private static Map<String, Object>[] serializeItemStack(ItemStack[] items) {
-
         Map<String, Object>[] result = new Map[items.length];
-
         for (int i = 0; i < items.length; i++) {
-            ItemStack is = items[i];
-            if (is == null) {
+            ItemStack stack = items[i];
+            if (stack == null)
                 result[i] = new HashMap<>();
-            }
             else {
-                result[i] = is.serialize();
-                if (is.hasItemMeta()) {
-                    result[i].put("meta", is.getItemMeta().serialize());
-                }
+                result[i] = stack.serialize();
+                if (stack.hasItemMeta()) result[i].put("meta", stack.getItemMeta().serialize());
             }
         }
 
@@ -68,26 +59,18 @@ public class ItemSerializer {
     @SuppressWarnings("unchecked")
     private static ItemStack[] deserializeItemStack(Map<String, Object>[] map) {
         ItemStack[] items = new ItemStack[map.length];
-
         for (int i = 0; i < items.length; i++) {
             Map<String, Object> s = map[i];
-            if (s.size() == 0) {
-                items[i] = null;
-            }
+            if (s.size() == 0) items[i] = null;
             else {
                 try {
                     if (s.containsKey("meta")) {
-                        Map<String, Object> im = new HashMap<>(
-                                (Map<String, Object>) s.remove("meta"));
+                        Map<String, Object> im = new HashMap<>((Map<String, Object>) s.remove("meta"));
                         im.put("==", "ItemMeta");
                         ItemStack is = ItemStack.deserialize(s);
-                        is.setItemMeta((ItemMeta) ConfigurationSerialization
-                                .deserializeObject(im));
+                        is.setItemMeta((ItemMeta) ConfigurationSerialization.deserializeObject(im));
                         items[i] = is;
-                    }
-                    else {
-                        items[i] = ItemStack.deserialize(s);
-                    }
+                    } else items[i] = ItemStack.deserialize(s);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -97,5 +80,4 @@ public class ItemSerializer {
         }
         return items;
     }
-
 }

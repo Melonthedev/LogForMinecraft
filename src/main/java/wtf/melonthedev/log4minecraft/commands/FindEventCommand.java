@@ -13,6 +13,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import wtf.melonthedev.log4minecraft.LogTarget;
 import wtf.melonthedev.log4minecraft.enums.LogLevel;
+import wtf.melonthedev.log4minecraft.services.JsonFile;
 import wtf.melonthedev.log4minecraft.utils.LoggerUtils;
 import wtf.melonthedev.log4minecraft.Main;
 import wtf.melonthedev.log4minecraft.enums.Action;
@@ -88,7 +89,7 @@ public class FindEventCommand implements TabExecutor {
                     sender.sendMessage(Main.prefix + ChatColor.RED + "File not found: " + fileName + ", Skipping!");
                     continue;
                 }
-                JSONObject obj = LoggerUtils.getJsonObjFromFile(fileName);
+                JSONObject obj = (fileName.equals(Main.logFile.fileName) ? Main.logFile.get() : new JsonFile(fileName, "logs", false).get()); //LoggerUtils.getJsonObjFromFile(fileName);
                 JSONArray logs = (JSONArray) obj.get("logs");
                 for (Object o : logs){
                     JSONObject log = (JSONObject) o;

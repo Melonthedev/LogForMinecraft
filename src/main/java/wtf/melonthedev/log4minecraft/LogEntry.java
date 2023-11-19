@@ -24,22 +24,22 @@ public class LogEntry {
     private final Location location;
     private OfflinePlayer owner;
 
-    public LogEntry(@NotNull LogTarget subject, Action action, @Nullable LogTarget target, OfflinePlayer owner) {
+    public LogEntry(@NotNull LogTarget subject, Action action, @Nullable LogTarget target) {
         this.subject = subject;
         this.action = action;
         this.target = target;
         this.location = (target != null && target.tryGetLocation() != null) ? target.tryGetLocation() : subject.tryGetLocation();
-        this.owner = owner;
+        this.owner = target.getOwner();
         this.handleOwner();
         this.handleInvBackup();
     }
 
-    public LogEntry(@NotNull LogTarget subject, Action action, OfflinePlayer owner) {
+    public LogEntry(@NotNull LogTarget subject, Action action) {
         this.subject = subject;
         this.action = action;
         this.target = null;
         this.location = subject.tryGetLocation();
-        this.owner = owner;
+        this.owner = target.getOwner();
         this.handleOwner();
         this.handleInvBackup();
     }

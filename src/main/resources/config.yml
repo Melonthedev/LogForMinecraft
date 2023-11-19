@@ -9,6 +9,8 @@ logNonContainerBlockRightClicks: true
 
 checkSusPlayerActivity: true
 
+logFileCacheDuration: 1 # min
+
 createInventoryBackups:
   onDeath: true
   onLeave: false

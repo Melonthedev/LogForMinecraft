@@ -10,10 +10,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.Nullable;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import wtf.melonthedev.log4minecraft.LogEntry;
 import wtf.melonthedev.log4minecraft.LogTarget;
 import wtf.melonthedev.log4minecraft.Main;
@@ -22,42 +18,12 @@ import wtf.melonthedev.log4minecraft.enums.LogLevel;
 import wtf.melonthedev.log4minecraft.enums.LogOutput;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
 public class LoggerUtils {
-
-    //Owner System
-    public static boolean hasPersistentDataContainer(Object obj) {
-        return obj instanceof PersistentDataHolder;
-    }
-
-    public static OfflinePlayer getOwner(Object obj) {
-        if (!hasPersistentDataContainer(obj)) return null;
-        PersistentDataContainer container = ((PersistentDataHolder) obj).getPersistentDataContainer();
-        return getOwner(container);
-    }
-
-    public static OfflinePlayer getOwner(ItemStack stack) {
-        if (stack == null || !stack.hasItemMeta()) return null;
-        return getOwner(stack.getItemMeta().getPersistentDataContainer());
-    }
-
-    public static OfflinePlayer getOwner(PersistentDataContainer container) {
-        if (!container.has(new NamespacedKey(Main.getPlugin(), "owner"))) return null;
-        String owner = container.getOrDefault(new NamespacedKey(Main.getPlugin(), "owner"), PersistentDataType.STRING, "");
-        try {
-            UUID uuid = UUID.fromString(owner);
-            return Bukkit.getOfflinePlayer(uuid);
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
-    }
 
     //LogLevel & LogAction
     public static void setLogLevel(LogOutput output, LogLevel level) {
@@ -119,65 +85,9 @@ public class LoggerUtils {
         return false;
     }
 
-    //IO Methods
-    /*public static JSONObject getJsonObjFromLogFile() {
-        File file = getLogJsonFile();
-        return getJsonObject(file);
-    }*/
-    public static JSONObject getJsonObjFromInvBackupFile() {
-        File file = getInvBackupJsonFile();
-        return getJsonObject(file);
-    }
-    public static JSONObject getJsonObjFromFile(String fileName) {
-        File file = getJsonFile(fileName, "logs");
-        return getJsonObject(file);
-    }
-    @Nullable
-    private static JSONObject getJsonObject(File file) {
-        JSONParser jsonParser = new JSONParser();
-        try (FileReader reader = new FileReader(file))
-        {
-            Object obj = jsonParser.parse(reader);
-            JSONObject jo = (JSONObject) obj;
-            return jo;
-        } catch (ParseException | IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-    /*public static File getLogJsonFile() {
-        String name = "log4minecraft-" + Calendar.getInstance().get(Calendar.YEAR) +
-                "-" + getWithZeros(Calendar.getInstance().get(Calendar.MONTH) + 1) +
-                "-" + getWithZeros(Calendar.getInstance().get(Calendar.DAY_OF_MONTH)) + ".json";
-        return getJsonFile(name, "logs");
-    }*/
-    public static File getInvBackupJsonFile() {
-        String name = "log4minecraft-inventorybackups.json";
-        return getJsonFile(name, "invbackups");
-    }
-
-    public static File getJsonFile(String name, String jsonRoot) {
-        File file = getExistingJsonFile(name);
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-                try (FileWriter fw = new FileWriter(file)) {
-                    fw.write("{\"" + jsonRoot + "\" : []}");
-                    fw.flush();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return file;
-    }
-
     public static File getExistingJsonFile(String name) {
         return new File(Main.getPlugin().getDataFolder(), name);
     }
-
 
     //UTILS
     public static String getWithZeros(int i) {

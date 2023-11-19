@@ -1,17 +1,23 @@
 package wtf.melonthedev.log4minecraft;
 
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataHolder;
+import org.bukkit.persistence.PersistentDataType;
 import wtf.melonthedev.log4minecraft.utils.LoggerUtils;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
+import java.util.UUID;
 
 public class LogTarget {
     private final TargetType activeType;
@@ -24,26 +30,61 @@ public class LogTarget {
     public LogTarget(Entity entity) {
         this.entity = entity;
         this.activeType = TargetType.ENTITY;
-        this.owner = LoggerUtils.getOwner(entity);
+        this.owner = getOwner(entity);
     }
 
     public LogTarget(ItemStack item) {
         this.item = item;
         this.activeType = TargetType.ITEM;
-        this.owner = LoggerUtils.getOwner(item);
+        this.owner = getOwner(item);
     }
 
     public LogTarget(Block block) {
         this.block = block;
         this.activeType = TargetType.BLOCK;
-        this.owner = LoggerUtils.getOwner(block);
+        this.owner = getOwner(block);
     }
 
     public LogTarget(Item itemEntity) {
         this.itemEntity = itemEntity;
         this.activeType = TargetType.ITEMENTITY;
-        this.owner = LoggerUtils.getOwner(itemEntity);
+        this.owner = getItemOwner(itemEntity);
     }
+
+
+    public static boolean hasPersistentDataContainer(Object obj) {
+        return obj instanceof PersistentDataHolder;
+    }
+
+
+    public static OfflinePlayer getItemOwner(Item itemEntity) {
+        return itemEntity.getOwner() == null
+                ? (itemEntity.getThrower() == null ? null
+                : Bukkit.getOfflinePlayer(itemEntity.getThrower()))
+                : Bukkit.getOfflinePlayer(itemEntity.getOwner());
+    }
+    public static OfflinePlayer getOwner(Object obj) {
+        if (!hasPersistentDataContainer(obj)) return null;
+        PersistentDataContainer container = ((PersistentDataHolder) obj).getPersistentDataContainer();
+        return getOwner(container);
+    }
+
+    public static OfflinePlayer getOwner(ItemStack stack) {
+        if (stack == null || !stack.hasItemMeta()) return null;
+        return getOwner(stack.getItemMeta().getPersistentDataContainer());
+    }
+
+    public static OfflinePlayer getOwner(PersistentDataContainer container) {
+        if (!container.has(new NamespacedKey(Main.getPlugin(), "owner"))) return null;
+        String owner = container.getOrDefault(new NamespacedKey(Main.getPlugin(), "owner"), PersistentDataType.STRING, "");
+        try {
+            UUID uuid = UUID.fromString(owner);
+            return Bukkit.getOfflinePlayer(uuid);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
 
     public TargetType getActiveType() {
         return activeType;
@@ -63,6 +104,10 @@ public class LogTarget {
 
     public Block getBlock() {
         return block;
+    }
+
+    public OfflinePlayer getOwner() {
+        return owner;
     }
 
     public String getKey() {
