@@ -2,14 +2,7 @@ package wtf.melonthedev.log4minecraft.utils;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.NamespacedKey;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataHolder;
-import org.bukkit.persistence.PersistentDataType;
 import wtf.melonthedev.log4minecraft.LogEntry;
 import wtf.melonthedev.log4minecraft.LogTarget;
 import wtf.melonthedev.log4minecraft.Main;
@@ -21,7 +14,6 @@ import java.io.File;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.UUID;
 
 public class LoggerUtils {
 
@@ -39,7 +31,7 @@ public class LoggerUtils {
         Main.getPlugin().getConfig().set("logactions." + action.name(), log);
         Main.getPlugin().saveConfig();
     }
-    public static boolean getLogAction(Action action) {
+    public static boolean shouldLogAction(Action action) {
         if (!Main.getPlugin().getConfig().contains("logactions." + action.name()))
             setLogAction(action, true);
         return Main.getPlugin().getConfig().getBoolean("logactions." + action.name());
@@ -54,7 +46,7 @@ public class LoggerUtils {
         }
     }
     public static boolean isValidForLogLevel(LogEntry entry, LogLevel level) {
-        if (!getLogAction(entry.getAction())) return false;
+        if (!shouldLogAction(entry.getAction())) return false;
         return isValidForLogLevel(entry.getSubject(), level) && isValidForLogLevel(entry.getTarget(), level);
     }
     public static boolean isValidForLogLevel(LogTarget target, LogLevel level) {

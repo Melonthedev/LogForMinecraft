@@ -45,7 +45,6 @@ public class FindEventCommand implements TabExecutor {
             String y = args.length >= 8 ? args[6] : "*";
             String z = args.length >= 8 ? args[7] : "*";
             String world = args.length >= 9 ? args[8] : "*";
-            //String loglevel = args.length >= 10 ? args[9] : "*";
 
             if (startingDate.equalsIgnoreCase("latest")) {
                 startingDate = Calendar.getInstance().get(Calendar.YEAR) +
@@ -75,12 +74,12 @@ public class FindEventCommand implements TabExecutor {
             int month = Integer.parseInt(startingDate.split("-")[1]);
             int day = Integer.parseInt(startingDate.split("-")[2]);
 
-            int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+            /*int currentYear = Calendar.getInstance().get(Calendar.YEAR);
             int currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1;
-            int currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+            int currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);*/
 
             LocalDate startDate = LocalDate.of(year, month, day);
-            LocalDate currentDate = LocalDate.of(currentYear, currentMonth, currentDay);
+            LocalDate currentDate = LocalDate.now();//LocalDate.of(currentYear, currentMonth, currentDay);
 
             sender.sendMessage(ChatColor.AQUA + "Matching Log Entries:");
             for (LocalDate date = startDate; !date.isAfter(currentDate); date = date.plusDays(1)) {
@@ -89,7 +88,7 @@ public class FindEventCommand implements TabExecutor {
                     sender.sendMessage(Main.prefix + ChatColor.RED + "File not found: " + fileName + ", Skipping!");
                     continue;
                 }
-                JSONObject obj = (fileName.equals(Main.logFile.fileName) ? Main.logFile.get() : new JsonFile(fileName, "logs", false).get()); //LoggerUtils.getJsonObjFromFile(fileName);
+                JSONObject obj = (Main.logFile.getDateOfCreation().equals(date)) ? Main.logFile.get() : new JsonFile(fileName, "logs", false).get();
                 JSONArray logs = (JSONArray) obj.get("logs");
                 for (Object o : logs){
                     JSONObject log = (JSONObject) o;
@@ -116,7 +115,6 @@ public class FindEventCommand implements TabExecutor {
             }
         } catch (IllegalArgumentException e) {
             sender.sendMessage(Main.prefix + ChatColor.RED + "Invalid input! Check if the action is valid!");
-            //e.printStackTrace();
         }
         return false;
     }
@@ -164,6 +162,4 @@ public class FindEventCommand implements TabExecutor {
         }
         return tab;
     }
-
-
 }

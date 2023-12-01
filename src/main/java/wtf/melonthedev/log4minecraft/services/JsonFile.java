@@ -10,21 +10,26 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.logging.Level;
 
 public class JsonFile {
 
     private JSONObject cachedJsonFile;
-    private final File jsonFile;
-    private final boolean cache;
-    public String fileName;
+    public File jsonFile;
+    public final boolean cache;
+    private String fileName;
+    public String jsonRoot;
 
     public JsonFile(String fileName, String jsonRoot, boolean cache) {
         this.cache = cache;
-        this.fileName = fileName;
-        jsonFile = new File(Main.getPlugin().getDataFolder(), fileName);
-        loadFromFile(jsonRoot);
+        this.jsonRoot = jsonRoot;
+        setFile(fileName);
         if (cache) Bukkit.getScheduler().runTaskTimer(Main.getPlugin(), this::saveToDisk, 0, 20L * 60 * Main.logFileCacheDuration);
+    }
+
+    public void setFile(String fileName) {
+        this.fileName = fileName;
+        this.jsonFile = new File(Main.getPlugin().getDataFolder(), fileName);
+        loadFromFile(jsonRoot);
     }
 
     private void loadFromFile(String jsonRoot) {
@@ -42,28 +47,20 @@ public class JsonFile {
             }
         }
         JSONParser jsonParser = new JSONParser();
-        try (FileReader reader = new FileReader(jsonFile))
-        {
+        try (FileReader reader = new FileReader(jsonFile)) {
             Object obj = jsonParser.parse(reader);
-            JSONObject jo = (JSONObject) obj;
-            cachedJsonFile = jo;
+            cachedJsonFile = (JSONObject) obj;
         } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
     }
-
 
     public void write(JSONObject newJson) {
         cachedJsonFile = newJson;
         if (!cache) saveToDisk();
     }
 
-    public JSONObject get() {
-        return cachedJsonFile;
-    }
-
     public void saveToDisk() {
-        //Main.getPlugin().getLogger().log(Level.INFO, "SAVING TO DISK <------------------------------------------------------------");
         try (FileWriter file = new FileWriter(jsonFile)) {
             file.write(cachedJsonFile.toJSONString());
             file.flush();
@@ -72,5 +69,12 @@ public class JsonFile {
         }
     }
 
+    public JSONObject get() {
+        return cachedJsonFile;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
 
 }

@@ -29,7 +29,7 @@ public class LogEntry {
         this.action = action;
         this.target = target;
         this.location = (target != null && target.tryGetLocation() != null) ? target.tryGetLocation() : subject.tryGetLocation();
-        this.owner = target.getOwner();
+        this.owner = target == null ? null : target.getOwner();
         this.handleOwner();
         this.handleInvBackup();
     }
@@ -39,7 +39,7 @@ public class LogEntry {
         this.action = action;
         this.target = null;
         this.location = subject.tryGetLocation();
-        this.owner = target.getOwner();
+        this.owner = null;
         this.handleOwner();
         this.handleInvBackup();
     }
@@ -47,10 +47,9 @@ public class LogEntry {
     public void handleOwner() {
         if (getTarget() != null
                 && getTarget().getActiveType() == LogTarget.TargetType.BLOCK
-                && getTarget().getBlock().getState() instanceof Container
-                && getTarget().getBlock().getState() instanceof TileState) {
-            NamespacedKey key = new NamespacedKey(Main.getPlugin(), "owner");
+                && getTarget().getBlock().getState() instanceof Container) {
             TileState state = (TileState) getTarget().getBlock().getState();
+            NamespacedKey key = new NamespacedKey(Main.getPlugin(), "owner");
             PersistentDataContainer container = state.getPersistentDataContainer();
             switch (action) {
                 case PLACE -> container.set(key, PersistentDataType.STRING, getSubject().getEntity().getUniqueId().toString());

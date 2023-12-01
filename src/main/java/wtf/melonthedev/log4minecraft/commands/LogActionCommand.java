@@ -21,7 +21,7 @@ public class LogActionCommand implements TabExecutor {
                     sender.sendMessage(Main.prefix + "Usage: /logAction <action> <true/false>");
                     return true;
                 }
-                sender.sendMessage(Main.prefix + "Status (" + args[0].toLowerCase() + "): " + LoggerUtils.getLogAction(Action.valueOf(args[0].toUpperCase())));
+                sender.sendMessage(Main.prefix + "Status (" + args[0].toLowerCase() + "): " + LoggerUtils.shouldLogAction(Action.valueOf(args[0].toUpperCase())));
             }
             case 2 -> {
                 if (!Action.names().contains(args[0]) || (!args[1].equalsIgnoreCase("true") && !args[1].equalsIgnoreCase("false"))) {

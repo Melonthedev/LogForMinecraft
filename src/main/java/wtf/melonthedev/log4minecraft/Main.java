@@ -5,18 +5,18 @@ import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import wtf.melonthedev.log4minecraft.commands.*;
 import wtf.melonthedev.log4minecraft.services.JsonFile;
+import wtf.melonthedev.log4minecraft.services.LogFile;
 import wtf.melonthedev.log4minecraft.services.MinecraftLogger;
 import wtf.melonthedev.log4minecraft.services.PlayerActivityService;
-import wtf.melonthedev.log4minecraft.utils.LoggerUtils;
 
-import java.util.Calendar;
+import java.time.LocalDate;
 import java.util.logging.Level;
 
 public final class Main extends JavaPlugin {
 
     public static String prefix = ChatColor.BOLD + ChatColor.AQUA.toString() + "[Log4MC] " + ChatColor.YELLOW;
     private static JavaPlugin plugin;
-    public static JsonFile logFile;
+    public static LogFile logFile;
     public static JsonFile invBackupFile;
 
     public static boolean useExactLocations = false;
@@ -65,12 +65,8 @@ public final class Main extends JavaPlugin {
 
 
     public void initJsonFiles() {
-        String nameLogFile = "log4minecraft-" + Calendar.getInstance().get(Calendar.YEAR) +
-                "-" + LoggerUtils.getWithZeros(Calendar.getInstance().get(Calendar.MONTH) + 1) +
-                "-" + LoggerUtils.getWithZeros(Calendar.getInstance().get(Calendar.DAY_OF_MONTH)) + ".json";
-        logFile = new JsonFile(nameLogFile, "logs", true);
-        String nameInvBackupFile = "log4minecraft-inventorybackups.json";
-        invBackupFile = new JsonFile(nameInvBackupFile, "invbackups", true);
+        logFile = new LogFile(LocalDate.now(), true);
+        invBackupFile = new JsonFile("log4minecraft-inventorybackups.json", "invbackups", true);
     }
 
     @Override

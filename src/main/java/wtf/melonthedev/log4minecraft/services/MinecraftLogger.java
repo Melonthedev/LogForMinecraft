@@ -37,14 +37,14 @@ public class MinecraftLogger {
 
 
     public static void log(LogEntry entry) {
-        if (!LoggerUtils.getLogAction(entry.getAction()))
-            return; //Return if action shouldn't be logged
+        if (!LoggerUtils.shouldLogAction(entry.getAction()))
+            return;
         logToConsole(entry);
         logToTextFile(entry);
         logToFile(entry);
     }
 
-    private static void validateFile() {
+    private static void validateTextFile() {
         if (Calendar.getInstance().get(Calendar.DAY_OF_MONTH) != currentFileNameDayOfMonth) init();
     }
 
@@ -55,7 +55,7 @@ public class MinecraftLogger {
 
     private static void logToTextFile(LogEntry entry) {
         if (!LoggerUtils.isValidForLogLevel(entry, LoggerUtils.getLogLevel(LogOutput.TEXTFILE))) return;
-        validateFile();
+        validateTextFile();
         Writer output;
         try {
             output = new BufferedWriter(new FileWriter(logFile, true));
@@ -68,8 +68,7 @@ public class MinecraftLogger {
 
     private static void logToFile(LogEntry entry) {
         if (!LoggerUtils.isValidForLogLevel(entry, LoggerUtils.getLogLevel(LogOutput.FILE))) return;
-        JsonFile logFile = Main.logFile;
-        JSONObject object = logFile.get();
+        JSONObject object = Main.logFile.get();
         JSONArray array = (JSONArray) object.get("logs");
         JSONObject log = new JSONObject();
         JSONObject location = new JSONObject();
@@ -77,13 +76,15 @@ public class MinecraftLogger {
         location.put("y", entry.getLocation().getBlockY());
         location.put("z", entry.getLocation().getBlockZ());
         location.put("w", entry.getLocation().getWorld().getName());
+
         log.put("subject", entry.getSubject().getLabel());
         log.put("action", entry.getAction().name());
         if (entry.getTarget() != null) log.put("target", entry.getTarget().getLabel());
         log.put("location", location);
         log.put("created", Instant.now().getEpochSecond());
         if (entry.getOwner() != null) log.put("owner", entry.getOwner().getName());
+
         array.add(log);
-        logFile.write(object);
+        Main.logFile.write(object);
     }
 }
