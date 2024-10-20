@@ -1,5 +1,7 @@
 # Config file for Log4Minecraft
 
+cacheInterval: 120 # sec
+
 # X: 53.4383465 <-> X: 53
 useExactLocations: false
 

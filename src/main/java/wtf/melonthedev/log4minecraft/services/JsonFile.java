@@ -1,6 +1,7 @@
 package wtf.melonthedev.log4minecraft.services;
 
 import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitTask;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -19,11 +20,13 @@ public class JsonFile {
     private String fileName;
     public String jsonRoot;
 
+    public BukkitTask cacheTask;
+
     public JsonFile(String fileName, String jsonRoot, boolean cache) {
         this.cache = cache;
         this.jsonRoot = jsonRoot;
         setFile(fileName);
-        if (cache) Bukkit.getScheduler().runTaskTimer(Main.getPlugin(), this::saveToDisk, 0, 20L * 60 * Main.logFileCacheDuration);
+        if (cache) cacheTask = Bukkit.getScheduler().runTaskTimer(Main.getPlugin(), this::saveToDisk, 0, 20L * Main.getPlugin().getConfig().getInt("cacheInterval", 60) * Main.logFileCacheDuration);
     }
 
     public void setFile(String fileName) {
