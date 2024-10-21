@@ -25,6 +25,7 @@ public final class Main extends JavaPlugin {
     public static boolean logActionsInPlayersInventory = false;
     public static boolean logNonContainerBlockRightClicks = true;
     public static boolean checkSusPlayerActivity = true;
+    public static boolean includeFindLogCommandsInFindLogCommandOutput = false;
     public static int logFileCacheDuration = 1;
 
     @Override
@@ -61,10 +62,11 @@ public final class Main extends JavaPlugin {
         logNonContainerBlockRightClicks = getConfig().getBoolean("logNonContainerBlockRightClicks", true);
         checkSusPlayerActivity = getConfig().getBoolean("checkSusPlayerActivity", true);
         logFileCacheDuration = getConfig().getInt("logFileCacheDuration", 1);
+        includeFindLogCommandsInFindLogCommandOutput = getConfig().getBoolean("includeFindLogCommandsInFindLogCommandOutput", false);
     }
 
 
-    public void initJsonFiles() {
+    public static void initJsonFiles() {
         logFile = new LogFile(LocalDate.now(), true);
         invBackupFile = new JsonFile("log4minecraft-inventorybackups.json", "invbackups", true);
     }

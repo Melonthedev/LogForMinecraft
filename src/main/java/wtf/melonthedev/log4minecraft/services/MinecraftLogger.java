@@ -69,6 +69,7 @@ public class MinecraftLogger {
     private static void logToFile(LogEntry entry) {
         if (!LoggerUtils.isValidForLogLevel(entry, LoggerUtils.getLogLevel(LogOutput.FILE))) return;
         JSONObject object = Main.logFile.get();
+        if (object == null) return;
         JSONArray array = (JSONArray) object.get("logs");
         JSONObject log = new JSONObject();
         JSONObject location = new JSONObject();
@@ -78,11 +79,15 @@ public class MinecraftLogger {
         location.put("w", entry.getLocation().getWorld().getName());
 
         log.put("subject", entry.getSubject().getLabel());
+        if (entry.getSubject().getEntity() != null)
+            log.put("subjectUUID", entry.getSubject().getEntity().getUniqueId().toString());
+
         log.put("action", entry.getAction().name());
         if (entry.getTarget() != null) log.put("target", entry.getTarget().getLabel());
         log.put("location", location);
         log.put("created", Instant.now().getEpochSecond());
         if (entry.getOwner() != null) log.put("owner", entry.getOwner().getName());
+        if (entry.getOwner() != null) log.put("ownerUUID", entry.getOwner().getUniqueId().toString());
 
         array.add(log);
         Main.logFile.write(object);
