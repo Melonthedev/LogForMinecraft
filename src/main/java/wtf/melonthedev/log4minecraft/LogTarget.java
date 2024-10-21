@@ -25,7 +25,9 @@ public class LogTarget {
     private ItemStack item;
     private Item itemEntity;
     private Block block;
-    private final OfflinePlayer owner;
+    private String text;
+    private Location location;
+    private OfflinePlayer owner;
 
     public LogTarget(Entity entity) {
         this.entity = entity;
@@ -51,6 +53,15 @@ public class LogTarget {
         this.owner = getItemOwner(itemEntity);
     }
 
+    public LogTarget(String text) {
+        this.activeType = TargetType.TEXT;
+        this.text = text;
+    }
+
+    public LogTarget(Location location) {
+        this.activeType = TargetType.TEXT;
+        this.location = location;
+    }
 
     public static boolean hasPersistentDataContainer(Object obj) {
         return obj instanceof PersistentDataHolder;
@@ -144,6 +155,12 @@ public class LogTarget {
             case ITEMENTITY -> {
                 return itemEntity.getItemStack().getType().name() + (item != null && item.hasItemMeta() && !LoggerUtils.isComponentEmpty(itemEntity.getItemStack().getItemMeta().displayName()) ? " [" + PlainTextComponentSerializer.plainText().serialize(Objects.requireNonNull(itemEntity.getItemStack().getItemMeta().displayName())) + "]" : "");
             }
+            case TEXT ->  {
+                return text;
+            }
+            case LOCATION -> {
+                return location.toString();
+            }
             default -> {
                 return "";
             }
@@ -161,6 +178,9 @@ public class LogTarget {
             case ITEMENTITY -> {
                 return itemEntity.getLocation();
             }
+            case LOCATION -> {
+                return location;
+            }
             default -> {
                 return null;
             }
@@ -168,6 +188,6 @@ public class LogTarget {
     }
 
     public enum TargetType {
-        ENTITY, ITEM, BLOCK, ITEMENTITY
+        ENTITY, ITEM, BLOCK, ITEMENTITY, TEXT, LOCATION
     }
 }

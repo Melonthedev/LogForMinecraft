@@ -1,21 +1,27 @@
 package wtf.melonthedev.log4minecraft.enums;
 
-import org.bukkit.event.inventory.InventoryAction;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public enum Action {
-    INTERACT("interacted with"),
-    BREAK("broke"),
-    PLACE("placed"),
-    PICKUP("picked up"),
-    DROP("dropped"),
-    GRAB("grabbed"),
-    DIE("died"),
-    KILL("killed"),
-    DESPAWN("despawned"),
-    BAN("got banned"),
+    INTERACT("interacts with"),
+    BREAK("breaks"),
+    PLACE("places"),
+    PICKUP("picks up"),
+    DROP("drops"),
+    GRAB("grabs"),
+    DIE("dies"),
+    KILL("kills"),
+    DESPAWN("despawnes"),
+    BAN("is banned"),
+    UNBAN("is unanned"),
+    KICK("is kicked because of"),
+    JOIN("joins"),
+    LEAVE("leaves"),
+    EXECUTE_COMMAND("executes command"),
+    COMPLETES_ADVANCEMENT("completes advancement"),
+    CHANGES_WORLD("changes world to"),
+
 
     ALL("*");
 

@@ -13,6 +13,8 @@ checkSusPlayerActivity: true
 
 logFileCacheDuration: 1 # min
 
+includeFindLogCommandsInFindLogCommandOutput: false
+
 createInventoryBackups:
   onDeath: true
   onLeave: false
@@ -23,16 +25,21 @@ logOutputLevels:
   FILE: NORMAL
 
 logactions:
-  BREAK: true
-  DIE: true
-  DESPAWN: true
-  KILL: true
-  PICKUP: true
-  GRAB: true
-  DROP: true
-  INTERACT: true
-  PLACE: true
-  BAN: true
+  BREAK: true # On Block Destruction
+  DIE: true # On Entity Death
+  DESPAWN: true # On Entity Despawn
+  KILL: true # On Entity Killling Entity
+  PICKUP: true # On Item Pickup (Ground)
+  GRAB: true # On Item Pickup (Container) (Chest, Furnace, ...)
+  DROP: true # On Item Drop
+  INTERACT: true # On Block Interaction (Right Click)
+  PLACE: true # On Block Placement
+  BAN: true # On Player Ban
+  EXECUTE_COMMAND: true # On Command Dispatch
+  JOIN: true # On Player Join
+  LEAVE: true # On Player Leave
+  COMPLETES_ADVANCEMENT: true # On Advancement Completion
+  CHANGES_WORLD: true # On Player World Change
 
 logLevels: # Set between normal/disabled/detailed/valuable
   stone: detailed

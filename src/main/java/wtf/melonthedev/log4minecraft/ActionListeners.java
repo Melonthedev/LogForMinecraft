@@ -1,5 +1,6 @@
 package wtf.melonthedev.log4minecraft;
 
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.block.Container;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
@@ -10,15 +11,14 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
 import wtf.melonthedev.log4minecraft.enums.Action;
 import wtf.melonthedev.log4minecraft.services.InventoryBackupService;
 import wtf.melonthedev.log4minecraft.services.MinecraftLogger;
 import wtf.melonthedev.log4minecraft.services.PlayerActivityService;
+
+import java.util.logging.Level;
 
 public class ActionListeners implements Listener {
 
@@ -84,8 +84,40 @@ public class ActionListeners implements Listener {
     }
 
     @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        MinecraftLogger.log(new LogEntry(new LogTarget(event.getPlayer()), Action.JOIN));
+    }
+
+    @EventHandler
     public void onQuit(PlayerQuitEvent event) {
+        MinecraftLogger.log(new LogEntry(new LogTarget(event.getPlayer()), Action.LEAVE));
+
         if (!Main.createInvBackupOnLeave) return;
         InventoryBackupService.backupInventory(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onPlayerAdvancementComplete(PlayerAdvancementDoneEvent event) {
+        MinecraftLogger.log(new LogEntry(new LogTarget(event.getPlayer()), Action.COMPLETES_ADVANCEMENT, new LogTarget(PlainTextComponentSerializer.plainText().serialize(event.getAdvancement().displayName()))));
+    }
+
+    @EventHandler
+    public void onPlayerWorldChange(PlayerChangedWorldEvent event) {
+        MinecraftLogger.log(new LogEntry(new LogTarget(event.getPlayer()), Action.CHANGES_WORLD, new LogTarget(event.getPlayer().getWorld().getName() + " from " + event.getFrom().getName())));
+    }
+
+    @EventHandler
+    public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
+        if (event.getMessage().contains("rl") || event.getMessage().contains("reload") || event.getMessage().contains("stop") || event.getMessage().contains("restart") || event.getMessage().contains("save")) {
+            Main.getPlugin().getLogger().log(Level.INFO, "Command " + event.getMessage() + " was not logged to prevent data corruption.");
+            return;
+        }
+
+        MinecraftLogger.log(new LogEntry(new LogTarget(event.getPlayer()), Action.EXECUTE_COMMAND, new LogTarget(event.getMessage())));
+    }
+
+    @EventHandler
+    public void onPlayerKick(PlayerKickEvent event) {
+        MinecraftLogger.log(new LogEntry(new LogTarget(event.getPlayer()), Action.KICK, new LogTarget(event.getCause().name() + " - Reason: " + PlainTextComponentSerializer.plainText().serialize(event.reason()))));
     }
 }

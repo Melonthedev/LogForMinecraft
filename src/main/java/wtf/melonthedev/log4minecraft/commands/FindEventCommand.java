@@ -1,5 +1,10 @@
 package wtf.melonthedev.log4minecraft.commands;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -89,6 +94,10 @@ public class FindEventCommand implements TabExecutor {
                     continue;
                 }
                 JSONObject obj = (Main.logFile.getDateOfCreation().equals(date)) ? Main.logFile.get() : new JsonFile(fileName, "logs", false).get();
+                if (obj == null) {
+                    sender.sendMessage(Main.prefix + ChatColor.RED + "Error reading currently cached logfile: " + fileName + ", Skipping!");
+                    continue;
+                }
                 JSONArray logs = (JSONArray) obj.get("logs");
                 for (Object o : logs){
                     JSONObject log = (JSONObject) o;
@@ -101,16 +110,35 @@ public class FindEventCommand implements TabExecutor {
                     if (!y.equalsIgnoreCase("*") && (loc.get("y") == null || !(String.valueOf(loc.get("y")).equalsIgnoreCase(y)))) continue;
                     if (!z.equalsIgnoreCase("*") && (loc.get("z") == null || !(String.valueOf(loc.get("z")).equalsIgnoreCase(z)))) continue;
                     if (!world.equalsIgnoreCase("*") && (loc.get("w") == null || !((String) loc.get("w")).equalsIgnoreCase(world))) continue;
+
+                    String logTarget = String.valueOf(log.get("target"));
+                    if (log.get("action") == Action.EXECUTE_COMMAND.name() && log.get("target") != null
+                            && (logTarget.contains("findevent") || logTarget.contains("searchlog") || logTarget.contains("findlog"))
+                            && !Main.includeFindLogCommandsInFindLogCommandOutput) {
+                        continue; // Skip if its a findlog command
+                    }
+
                     /*if (!loglevel.equalsIgnoreCase("*") && LoggerUtils.isValidLogLevel(loglevel)
                             && (log.get("target") == null || LoggerUtils.isValidForLogLevel((String) log.get("target"), LogLevel.valueOf(loglevel)))
                             && LoggerUtils.isValidForLogLevel((String) log.get("subject"), LogLevel.valueOf(loglevel))) continue;*/
 
-                    sender.sendMessage(ChatColor.GRAY + Instant.ofEpochSecond((long) log.get("created")).toString() + ChatColor.GOLD
+                    /*sender.sendMessage(ChatColor.GRAY + Instant.ofEpochSecond((long) log.get("created")).toString() + ChatColor.GOLD
                             + " - " + log.get("subject") + " " + ChatColor.AQUA
                             + Action.valueOf(log.get("action").toString()).getDisplayedString()  + " " + ChatColor.RED
                             + (log.get("target") != null ? log.get("target") + " " : "") + ChatColor.YELLOW
                             + (loc != null ? "at X: " + loc.get("x") + " Y: " + loc.get("y") + " Z: " + loc.get("z") + " W: " + loc.get("w") : "")
-                            + (log.get("owner") != null ? ChatColor.LIGHT_PURPLE + " Owner: " + log.get("owner") : ""));
+                            + (log.get("owner") != null ? ChatColor.LIGHT_PURPLE + " Owner: " + log.get("owner") : ""));*/
+                    TextComponent message = Component.text()
+                            .append(Component.text(Instant.ofEpochSecond((long) log.get("created")).toString()).color(NamedTextColor.GRAY))
+                            .append(Component.text(" - " + log.get("subject") + " ").color(NamedTextColor.GOLD).hoverEvent(Component.text(log.get("subjectUUID") == null ? "No UUID found" : log.get("subjectUUID").toString())).clickEvent(ClickEvent.runCommand("/log4minecraft:manageinventory " + log.get("subject") + " listbackups")))
+                            .append(Component.text(Action.valueOf(log.get("action").toString()).getDisplayedString()  + " ").color(NamedTextColor.AQUA))
+                            .append(Component.text((log.get("target") != null ? log.get("target") + " " : "")).color(NamedTextColor.RED))
+                            .append(Component.text((loc != null ? "at X: " + loc.get("x") + " Y: " + loc.get("y") + " Z: " + loc.get("z") + " W: " + loc.get("w") : "")).color(NamedTextColor.YELLOW))
+                            .append(Component.text((log.get("owner") != null ? " Owner: " + log.get("owner") : ""))
+                                    .color(NamedTextColor.LIGHT_PURPLE)
+                                    .hoverEvent(Component.text(log.get("ownerUUID") == null ? "No UUID found" : log.get("ownerUUID").toString())))
+                            .build();
+                    sender.sendMessage(message);
                 }
             }
         } catch (IllegalArgumentException e) {
